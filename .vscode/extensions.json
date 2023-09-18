@@ -2,7 +2,17 @@
   "recommendations": [
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
-    "firsttris.vscode-jest-runner",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "msjsdiag.debugger-for-chrome",
+    "mikestead.dotenv",
+    "eamodio.gitlens",
+    "donjayamanne.githistory",
+    "lokalise.i18n-ally",
+    "wix.vscode-import-cost",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "bradlc.vscode-tailwindcss",
+    "firsttris.vscode-jest-runner"
   ]
 }

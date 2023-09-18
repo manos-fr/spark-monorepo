@@ -1,0 +1,51 @@
+version: '3.8'
+name: 'spark'
+services:
+  postgres:
+    image: postgres:15
+    ports:
+      - '5433:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${HASURA_ADMIN_SECRET}
+    restart: on-failure
+    command:
+      - 'postgres'
+      - '-c'
+      - 'wal_level=logical'
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   restart: on-failure
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - 5051:80
+  #   ## you can change pgAdmin default username/password with below environment variables
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: pgadmin@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  graphql-engine:
+    image: hasura/graphql-engine:v2.25.0.cli-migrations-v3
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'postgres'
+    restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${HASURA_ADMIN_SECRET}@host.docker.internal:5433/postgres
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:${HASURA_ADMIN_SECRET}@host.docker.internal:5433/postgres
+      ## enable the console served by server
+      HASURA_GRAPHQL_DEV_MODE: 'true'
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log, jwk-refresh-log
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
+volumes:
+  db_data:

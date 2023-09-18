@@ -1,0 +1,22 @@
+table:
+  name: users
+  schema: public
+object_relationships:
+  - name: author
+    using:
+      manual_configuration:
+        column_mapping:
+          id: author_id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public
+  - name: editor
+    using:
+      manual_configuration:
+        column_mapping:
+          id: editor_id
+        insertion_order: null
+        remote_table:
+          name: users
+          schema: public

@@ -10,11 +10,14 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2020", "dom", "es2021"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@spark-monorepo/spark-shared": ["libs/spark-shared/src/index.ts"]
+    },
+    "strict": false
   },
   "exclude": ["node_modules", "tmp"]
 }

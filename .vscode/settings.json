@@ -52,12 +52,5 @@
   "i18n-ally.pathMatcher": "{locale}/translation.json",
   "i18n-ally.keystyle": "nested",
   "emmet.showExpandedAbbreviation": "never",
-  "peacock.color": "#215732",
-  "tailwindCSS.emmetCompletions": true,
-  "tailwindCSS.classAttributes": ["class", "className", "ngClass", "style"],
-  "tailwindCSS.experimental.classRegex": [
-    "tw`([^`]*)",
-    ["tw.style\\(([^)]*)\\)", "'([^']*)'"]
-  ],
-  "cSpell.words": ["twrnc"]
+  "peacock.color": "#215732"
 }

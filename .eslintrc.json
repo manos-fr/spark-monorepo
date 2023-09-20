@@ -2,6 +2,7 @@
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nx"],
+  "extends": ["plugin:prettier/recommended"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -18,6 +19,12 @@
               }
             ]
           }
+        ],
+        "arrow-body-style": ["error"],
+        "object-shorthand": [
+          "error",
+          "always",
+          { "avoidExplicitReturnArrows": false }
         ]
       }
     },

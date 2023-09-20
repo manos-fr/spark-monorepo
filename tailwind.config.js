@@ -3,16 +3,6 @@ module.exports = {
   mode: 'jit',
   content: ['./apps/ui/src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    fontSize: {
-      '2xs': '.625rem',
-      xs: '.75rem',
-      sm: '.875rem',
-      base: '1rem',
-      lg: '1.125rem',
-      xl: '1.688rem',
-      '2xl': '2rem',
-      '3xl': '2.375rem'
-    },
     extend: {
       zIndex: {
         'dropdown-back-drop': 1000,
@@ -70,18 +60,6 @@ module.exports = {
           700: '#15803d',
           800: '#166534',
           900: '#14532d',
-        },
-        tuvr: {
-          blue: {
-            DEFAULT: '#0071B9',
-            primary: '#0071B9',
-            dark: '#265D7F',
-            light: '#b3d3ea',
-          },
-          red: {
-            DEFAULT: '#D20033',
-            dark: '#CF1938',
-          }
         },
         blue: {
           DEFAULT: '#0071b9',

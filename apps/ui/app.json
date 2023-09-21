@@ -10,6 +10,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "ui",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -34,7 +35,8 @@
           "skipProguard": false,
           "subdomains": ["10.0.2.2", "localhost"]
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }

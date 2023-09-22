@@ -60,7 +60,7 @@ pnpm reset-infra
 pnpm update-schema
 ```
 
-### Notes
+## Notes
 
 - make sure to have all recommended extensions installed in VS code
 
@@ -78,8 +78,22 @@ Code for GraphQL mutations and queries as well as their types can be autogenerat
 
 ### Developer guidelines
 
-- feature branches follow the naming: feature/{JIRA-Issue-ID}-{snake case short item description}
-- bugfix branches follow the naming: bugfix/{JIRA-Issue-ID}-{snake case short item description}
+#### Frontend Dev:
+
+- `We should use React Native and Expo provided components first and then style with tailwindcss or search on external styling libraries. We prefer unstyled component to style them with tailwind and be awesome.`
+
+##### Links for reference:
+
+- https://docs.expo.dev/tutorial/introduction/
+- https://docs.expo.dev/develop/project-structure/
+- https://reactnative.dev/docs/components-and-apis
+- https://tailwindui.com/components#product-application-ui
+- https://headlessui.com/
+
+#### General:
+
+- feature branches follow the naming: feature/{snake case task name on Asana}
+- bugfix branches follow the naming: bugfix/{snake case task name on Asana}
 - commit messages should follow the structure: "{verb in third person} ...." e.g. "introduces role profiles in hasura"
 
 #### Naming conventions

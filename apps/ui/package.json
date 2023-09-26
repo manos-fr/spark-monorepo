@@ -24,7 +24,9 @@
     "expo-status-bar": "~1.6.0",
     "react-native-gesture-handler": "~2.12.0",
     "dayjs": "*",
-    "nanoid": "*"
+    "@faker-js/faker": "*",
+    "zustand": "*",
+    "classnames": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp pnpm-lock.yaml apps/ui",

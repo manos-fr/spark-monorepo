@@ -4,20 +4,6 @@ module.exports = {
   content: ['./apps/ui/src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
-      zIndex: {
-        'dropdown-back-drop': 1000,
-        dropdown: 1100,
-        modal: 1200,
-        alert: 1300,
-        popup: 1400,
-        tooltip: 1500,
-      },
-      transitionProperty: {
-        height: 'height',
-        'max-h': 'max-height',
-        'max-h-opacity': 'max-height, opacity',
-        filter: 'filter',
-      },
       colors: {
         transparent: 'transparent',
         current: 'currentColor',

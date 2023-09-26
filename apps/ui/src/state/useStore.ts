@@ -1,37 +1,24 @@
-// import { create } from 'zustand';
-import { IAppState } from './IAppState';
-// import produce from 'immer';
-import { nanoid } from 'nanoid';
-// import { AlertType, UIAlert } from '@e2e/ui/model';
+import { create } from 'zustand';
+import { CartState } from './AppState';
+import { Product } from '@spark-monorepo/spark-shared';
 
-// export const useStore = create<IAppState>((set) => ({
-//   alerts: [],
-//   addAlert: (
-//     message: string,
-//     options?: {
-//       sticky?: boolean;
-//       type?: AlertType;
-//       timeout?: number;
-//     }
-//   ) =>
-//     set(
-//       produce((draft) => {
-//         const alert = {
-//           id: nanoid(),
-//           message,
-//           type: options?.type,
-//           timeout: options?.timeout || 5000,
-//           sticky: options?.sticky || false,
-//         };
+export const useCartStore = create<CartState>((set, get) => ({
+  user_id: undefined,
+  products: [],
 
-//         draft.alerts.push(alert);
-//       })
-//     ),
-//   removeAlert: (id: number) =>
-//     set(
-//       produce((draft) => {
-//         const index = draft.alerts.findIndex((n: UIAlert) => n.id === id);
-//         draft.alerts.splice(index, 1);
-//       })
-//     ),
-// }));
+  removeProduct: (id: number) => {
+    const { products } = get();
+    const newProducts: Product[] = products.filter(
+      (pr: Product) => pr?.id !== id
+    );
+    set({ products: newProducts });
+  },
+  addProduct: (product: Product) => {
+    const { products } = get();
+    const newProducts = [...products, product];
+    set({ products: newProducts });
+  },
+  emptyCart: () => {
+    set({ products: [] });
+  },
+}));

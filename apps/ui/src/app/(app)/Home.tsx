@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import tw from 'twrnc';
-import WelcomeWidget from '../components/home/WelcomeWidget';
+import WelcomeWidget from '../../components/home/WelcomeWidget';
 import { Link } from 'expo-router';
 import { Pressable } from 'react-native';
 

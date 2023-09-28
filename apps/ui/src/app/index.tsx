@@ -4,14 +4,28 @@ import { faker } from '@faker-js/faker';
 import tw from 'twrnc';
 import { useState } from 'react';
 import classNames from 'classnames';
+import { useGetSuppliersQuery } from '../graphql/generated';
+import { useGraphQlClient } from '../hooks/useGraphQlClient';
 
 export default function Page() {
   const { products, addProduct, emptyCart, removeProduct } = useCartStore();
   const [isFocus, setFocus] = useState<boolean>(false);
+
+  const { data: suppliersData } = useGetSuppliersQuery(useGraphQlClient());
+
   return (
     <View style={styles.container}>
       <View style={styles.main}>
         <Text style={tw`font-bold my-10 `}>{JSON.stringify(products)}</Text>
+        <View style={tw`my-6`}>
+          {suppliersData && (
+            <View>
+              {suppliersData.suppliers.map((e) => (
+                <Text style={tw`text-xl font-bold`}>{e.name}</Text>
+              ))}
+            </View>
+          )}
+        </View>
         <TextInput
           placeholder="Text Input"
           placeholderTextColor={'gray'}

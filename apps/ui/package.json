@@ -26,7 +26,9 @@
     "dayjs": "*",
     "@faker-js/faker": "*",
     "zustand": "*",
-    "classnames": "*"
+    "classnames": "*",
+    "@tanstack/react-query": "*",
+    "graphql-request": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp pnpm-lock.yaml apps/ui",

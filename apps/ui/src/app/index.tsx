@@ -5,6 +5,7 @@ import tw from 'twrnc';
 import { useState } from 'react';
 import { useGetSuppliersQuery } from '../graphql/generated';
 import { useGraphQlClient } from '../hooks/useGraphQlClient';
+import { Link } from 'expo-router';
 
 export default function Page() {
   const { products, addProduct, emptyCart, removeProduct } = useCartStore();
@@ -65,6 +66,11 @@ export default function Page() {
         >
           <Text>Remove Product</Text>
         </Pressable>
+        <View>
+          <Link href="/Login">Auth Page</Link>
+        </View>
+        <Text style={styles.title}>Hello World</Text>
+        <Text style={styles.subtitle}>This is the first page of your app.</Text>
       </View>
     </View>
   );

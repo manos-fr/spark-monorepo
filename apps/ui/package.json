@@ -26,7 +26,6 @@
     "dayjs": "*",
     "@faker-js/faker": "*",
     "zustand": "*",
-    "classnames": "*",
     "@tanstack/react-query": "*",
     "graphql-request": "*"
   },

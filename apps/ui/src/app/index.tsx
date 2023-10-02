@@ -3,7 +3,6 @@ import { useCartStore } from '../state/useStore';
 import { faker } from '@faker-js/faker';
 import tw from 'twrnc';
 import { useState } from 'react';
-import classNames from 'classnames';
 import { useGetSuppliersQuery } from '../graphql/generated';
 import { useGraphQlClient } from '../hooks/useGraphQlClient';
 
@@ -33,9 +32,12 @@ export default function Page() {
           focusable
           onFocus={() => setFocus(true)}
           onEndEditing={() => setFocus(false)}
-          style={tw`text-lg font-bold text-black px-10 p-2 rounded-md w-1/2 border-2 ${classNames(
-            isFocus ? 'border-red-500' : 'border-gray-500'
-          )}`}
+          style={tw.style(
+            [
+              'text-lg font-bold text-black px-10 p-2 rounded-md w-1/2 border-2',
+            ],
+            [isFocus ? 'border-red-500' : 'border-gray-500']
+          )}
         />
         <Pressable
           onPress={() =>

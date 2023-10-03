@@ -5,19 +5,28 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "extra": {
+      "eas": {
+        "projectId": "39f9a38d-9560-48a4-9380-571dfbcbbd21"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/39f9a38d-9560-48a4-9380-571dfbcbbd21"
+    },
+    "ios": {
+      // "bundleIdentifier": "com.manosfr.ui"
+      "bundleIdentifier": "com.company.calendar"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "scheme": "ui",
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
     "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

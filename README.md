@@ -87,8 +87,6 @@ Code for GraphQL mutations and queries as well as their types can be autogenerat
 - https://docs.expo.dev/tutorial/introduction/
 - https://docs.expo.dev/develop/project-structure/
 - https://reactnative.dev/docs/components-and-apis
-- https://tailwindui.com/components#product-application-ui
-- https://headlessui.com/
 
 #### General:
 
@@ -99,10 +97,38 @@ Code for GraphQL mutations and queries as well as their types can be autogenerat
 #### Naming conventions
 
 - React apps:
-  - components: PascalCase
+  - files: snake-case
+  - components names: PascalCase
   - folders and utility files: snake-case
 - Node services:
   - snake-case for all files
+
+#### Before making a PR
+
+Hey awesome!
+Please check the following:
+
+ - [ ] Have you tried enough?
+
+ - [ ] Has your branch the correct naming convention (-)?
+
+ - [ ] Have you logged your work in JIRA and the ugly PM tool?
+
+ - [ ] Is your JIRA task in "In Progress" status?
+
+ - [ ] Have you added the boring translations?
+
+ - [ ] Have you checked UI responsiveness, at least for small screens (not mobile)?
+
+ - [ ] Have you exported a clean dump, in case you have changed type_metadata and views?
+
+ - [ ] Have you fixed warnings, ES lint errors and cleared console logs?
+
+ - [ ] Have you cleaned up unnecessary comments and debugger?
+
+ - [ ] Have you tested for side effects in other parts of the application?
+
+ - [ ] I mean seriously, have you tested at all?
 
 ---
 

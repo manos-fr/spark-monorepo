@@ -103,7 +103,7 @@ Code for GraphQL mutations and queries as well as their types can be autogenerat
 - Node services:
   - snake-case for all files
 
-#### Before making a PR
+### Before making a PR
 
 Hey awesome!
 Please check the following:

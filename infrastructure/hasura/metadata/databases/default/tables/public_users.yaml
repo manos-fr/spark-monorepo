@@ -1,22 +1,45 @@
 table:
   name: users
   schema: public
-object_relationships:
-  - name: author
-    using:
-      manual_configuration:
-        column_mapping:
-          id: author_id
-        insertion_order: null
-        remote_table:
-          name: users
-          schema: public
-  - name: editor
-    using:
-      manual_configuration:
-        column_mapping:
-          id: editor_id
-        insertion_order: null
-        remote_table:
-          name: users
-          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - id
+        - email
+        - name
+        - uid
+        - created_at
+        - last_seen
+        - updated_at
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - email
+        - name
+        - uid
+        - created_at
+        - last_seen
+        - updated_at
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - email
+        - name
+        - uid
+        - created_at
+        - last_seen
+        - updated_at
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: user
+    permission:
+      backend_only: false
+      filter: {}

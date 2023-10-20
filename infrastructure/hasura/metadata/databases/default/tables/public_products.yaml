@@ -1,43 +1,39 @@
 table:
-  name: roles
+  name: products
   schema: public
-array_relationships:
-  - name: user_role
+object_relationships:
+  - name: user
     using:
-      foreign_key_constraint_on:
-        column: role_id
-        table:
-          name: user_roles
-          schema: public
+      foreign_key_constraint_on: user_id
 insert_permissions:
   - role: user
     permission:
       check: {}
       columns:
         - id
-        - key
+        - user_id
+        - category
         - description
-        - created_at
-        - updated_at
+        - name
 select_permissions:
   - role: user
     permission:
       columns:
         - id
-        - key
+        - user_id
+        - category
         - description
-        - created_at
-        - updated_at
+        - name
       filter: {}
 update_permissions:
   - role: user
     permission:
       columns:
         - id
-        - key
+        - user_id
+        - category
         - description
-        - created_at
-        - updated_at
+        - name
       filter: {}
       check: {}
 delete_permissions:

@@ -12,6 +12,9 @@ const { assetExts, sourceExts } = defaultConfig.resolver;
  *
  * @type {import('metro-config').MetroConfig}
  */
+
+defaultConfig.resolver.sourceExts.push('cjs');
+
 const customConfig = {
   transformer: {
     babelTransformerPath: require.resolve('react-native-svg-transformer'),
@@ -28,7 +31,7 @@ const customConfig = {
 module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
   // Change this to true to see debugging info.
   // Useful if you have issues resolving modules
-  debug: false,
+  debug: true,
   // all the file extensions used for imports other than 'ts', 'tsx', 'js', 'jsx', 'json'
   extensions: [],
   // Specify folders to watch, in addition to Nx defaults (workspace libraries and node_modules)

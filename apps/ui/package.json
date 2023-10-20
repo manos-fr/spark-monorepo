@@ -27,10 +27,12 @@
     "@faker-js/faker": "*",
     "zustand": "*",
     "@tanstack/react-query": "*",
-    "graphql-request": "*"
+    "graphql-request": "*",
+    "expo-secure-store": "*",
+    "firebase": "*"
   },
   "scripts": {
-    "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp pnpm-lock.yaml apps/ui",
+    "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp package-lock.json apps/ui",
     "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/ui"
   }
 }

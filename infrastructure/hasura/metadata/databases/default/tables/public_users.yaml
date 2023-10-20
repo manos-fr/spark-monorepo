@@ -1,6 +1,35 @@
 table:
   name: users
   schema: public
+array_relationships:
+  - name: owner
+    using:
+      foreign_key_constraint_on:
+        column: owner_id
+        table:
+          name: user_relationships
+          schema: public
+  - name: products
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: products
+          schema: public
+  - name: supplier
+    using:
+      foreign_key_constraint_on:
+        column: supplier_id
+        table:
+          name: user_relationships
+          schema: public
+  - name: user_role
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_roles
+          schema: public
 insert_permissions:
   - role: user
     permission:

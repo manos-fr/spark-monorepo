@@ -5,7 +5,7 @@
 - [Node](https://nodejs.org/de/blog/announcements/v18-release-announce/)
   - It is recommended to use [nvm](https://github.com/nvm-sh/nvm) or something similar
 - [Docker](https://www.docker.com/)
-- [pnpm](https://pnpm.io/installation)
+- [npm]
 - For the VSCode users, it is recommended to install the suggested plugins when you open the project the first time
 
 ## Getting Started
@@ -13,7 +13,7 @@
 - Install packages
 
 ```
-pnpm install
+npm install
 ```
 
 ##
@@ -21,43 +21,43 @@ pnpm install
 - Run UI
 
 ```
-pnpm start
+npm start
 ```
 
 - Docker start all needed services
 
 ```
-pnpm infra
+npm run infra
 ```
 
 - Run Sample Data
 
 ```
-pnpm sample-data
+npm run sample-data
 ```
 
 - Run server
 
 ```
-pnpm main-server
+npm run main-server
 ```
 
 - Hasura console
 
 ```
-pnpm hasura
+npm run hasura
 ```
 
 - Remove docker containers and volumes
 
 ```
-pnpm reset-infra
+npm run reset-infra
 ```
 
 - Update DB for first time use
 
 ```
-pnpm update-schema
+npm run update-schema
 ```
 
 ## Notes
@@ -108,27 +108,27 @@ Code for GraphQL mutations and queries as well as their types can be autogenerat
 Hey awesome!
 Please check the following:
 
- - [ ] Have you tried enough?
+- [ ] Have you tried enough?
 
- - [ ] Has your branch the correct naming convention (-)?
+- [ ] Has your branch the correct naming convention (-)?
 
- - [ ] Have you logged your work in JIRA and the ugly PM tool?
+- [ ] Have you logged your work in JIRA and the ugly PM tool?
 
- - [ ] Is your JIRA task in "In Progress" status?
+- [ ] Is your JIRA task in "In Progress" status?
 
- - [ ] Have you added the boring translations?
+- [ ] Have you added the boring translations?
 
- - [ ] Have you checked UI responsiveness, at least for small screens (not mobile)?
+- [ ] Have you checked UI responsiveness, at least for small screens (not mobile)?
 
- - [ ] Have you exported a clean dump, in case you have changed type_metadata and views?
+- [ ] Have you exported a clean dump, in case you have changed type_metadata and views?
 
- - [ ] Have you fixed warnings, ES lint errors and cleared console logs?
+- [ ] Have you fixed warnings, ES lint errors and cleared console logs?
 
- - [ ] Have you cleaned up unnecessary comments and debugger?
+- [ ] Have you cleaned up unnecessary comments and debugger?
 
- - [ ] Have you tested for side effects in other parts of the application?
+- [ ] Have you tested for side effects in other parts of the application?
 
- - [ ] I mean seriously, have you tested at all?
+- [ ] I mean seriously, have you tested at all?
 
 ---
 

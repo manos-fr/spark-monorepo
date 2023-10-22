@@ -8,3 +8,8 @@ export type Product =
       price: number;
     }
   | undefined;
+
+export type Credentials = {
+  email: string | undefined;
+  password: string | undefined;
+};

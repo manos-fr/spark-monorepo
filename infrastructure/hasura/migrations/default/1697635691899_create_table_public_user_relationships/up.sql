@@ -1,0 +1,1 @@
+CREATE TABLE "public"."user_relationships" ("id" serial NOT NULL, "supplier_id" integer NOT NULL, "owner_id" integer NOT NULL, PRIMARY KEY ("id","supplier_id","owner_id") , FOREIGN KEY ("supplier_id") REFERENCES "public"."users"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("owner_id") REFERENCES "public"."users"("id") ON UPDATE restrict ON DELETE restrict);

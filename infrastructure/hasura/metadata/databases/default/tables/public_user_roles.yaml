@@ -1,0 +1,43 @@
+table:
+  name: user_roles
+  schema: public
+object_relationships:
+  - name: role
+    using:
+      foreign_key_constraint_on: role_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - role_id
+        - user_id
+        - created_at
+        - updated_at
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - role_id
+        - user_id
+        - created_at
+        - updated_at
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - role_id
+        - user_id
+        - created_at
+        - updated_at
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: user
+    permission:
+      backend_only: false
+      filter: {}

@@ -1,22 +1,74 @@
 table:
   name: users
   schema: public
-object_relationships:
-  - name: author
+array_relationships:
+  - name: owner
     using:
-      manual_configuration:
-        column_mapping:
-          id: author_id
-        insertion_order: null
-        remote_table:
-          name: users
+      foreign_key_constraint_on:
+        column: owner_id
+        table:
+          name: user_relationships
           schema: public
-  - name: editor
+  - name: products
     using:
-      manual_configuration:
-        column_mapping:
-          id: editor_id
-        insertion_order: null
-        remote_table:
-          name: users
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: products
           schema: public
+  - name: supplier
+    using:
+      foreign_key_constraint_on:
+        column: supplier_id
+        table:
+          name: user_relationships
+          schema: public
+  - name: user_role
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: user_roles
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - id
+        - email
+        - name
+        - uid
+        - created_at
+        - last_seen
+        - updated_at
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - email
+        - name
+        - uid
+        - created_at
+        - last_seen
+        - updated_at
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - email
+        - name
+        - uid
+        - created_at
+        - last_seen
+        - updated_at
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: user
+    permission:
+      backend_only: false
+      filter: {}

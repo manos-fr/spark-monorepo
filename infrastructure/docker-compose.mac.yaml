@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   postgres:
-    image: postgres:15
+    image: postgres:14
     restart: on-failure
     ports:
       - '5432:5432'
@@ -25,5 +25,6 @@ services:
       HASURA_GRAPHQL_DEV_MODE: 'true' # enable debugging mode. It is recommended to disable this in production
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET} # OMG we should change that!
       HASURA_GRAPHQL_SERVER_PORT: 8082
+      HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
 volumes:
   db_data:

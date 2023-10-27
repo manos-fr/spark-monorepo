@@ -1,5 +1,7 @@
+- "!include public_orders.yaml"
 - "!include public_products.yaml"
 - "!include public_roles.yaml"
+- "!include public_user_orders.yaml"
 - "!include public_user_relationships.yaml"
 - "!include public_user_roles.yaml"
 - "!include public_users.yaml"

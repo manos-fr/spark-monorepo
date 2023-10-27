@@ -1,0 +1,13 @@
+table:
+  name: user_orders
+  schema: public
+object_relationships:
+  - name: order
+    using:
+      foreign_key_constraint_on: order_id
+  - name: user_1
+    using:
+      foreign_key_constraint_on: user_id_1
+  - name: user_2
+    using:
+      foreign_key_constraint_on: user_id_2

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import tw from 'twrnc';
-import { useAuthStore } from '../../../state/useStore';
+import { useAuthStore } from '../../state/useStore.ts';
 
 const ErrorComponent = () => {
   const error = useAuthStore(

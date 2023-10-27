@@ -12,7 +12,7 @@ array_relationships:
   - name: products
     using:
       foreign_key_constraint_on:
-        column: user_id
+        column: supplier_id
         table:
           name: products
           schema: public
@@ -22,6 +22,20 @@ array_relationships:
         column: supplier_id
         table:
           name: user_relationships
+          schema: public
+  - name: user_1
+    using:
+      foreign_key_constraint_on:
+        column: user_id_1
+        table:
+          name: user_orders
+          schema: public
+  - name: user_2
+    using:
+      foreign_key_constraint_on:
+        column: user_id_2
+        table:
+          name: user_orders
           schema: public
   - name: user_role
     using:

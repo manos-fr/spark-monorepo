@@ -6,11 +6,9 @@
     "start": "npx nx start ui",
     "sample-data": "npx nx start sample-data:serve",
     "main-server": "npx nx start server:serve",
-    "infra:mac": "docker compose -p spark -f infrastructure/docker-compose.mac.yaml up",
     "infra": "docker compose -p spark -f infrastructure/docker-compose.yaml up",
     "hasura": "cd infrastructure/hasura && hasura metadata reload && hasura console --console-port=9696 --admin-secret=jijikos",
     "reset-infra": "docker compose -p spark -f infrastructure/docker-compose.yaml down -v",
-    "reset-infra:mac": "docker compose -p spark -f infrastructure/docker-compose.mac.yaml down -v",
     "update-schema": "cd infrastructure/hasura && hasura migrate apply && hasura metadata apply",
     "codegen": "cd apps/ui && graphql-codegen --watch"
   },

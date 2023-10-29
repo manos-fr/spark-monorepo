@@ -5,6 +5,14 @@ object_relationships:
   - name: supplier
     using:
       foreign_key_constraint_on: supplier_id
+array_relationships:
+  - name: orders_products
+    using:
+      foreign_key_constraint_on:
+        column: product_id
+        table:
+          name: orders_products
+          schema: public
 insert_permissions:
   - role: user
     permission:
@@ -39,5 +47,4 @@ update_permissions:
 delete_permissions:
   - role: user
     permission:
-      backend_only: false
       filter: {}

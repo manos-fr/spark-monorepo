@@ -1,0 +1,18 @@
+table:
+  name: orders
+  schema: public
+array_relationships:
+  - name: order
+    using:
+      foreign_key_constraint_on:
+        column: order_id
+        table:
+          name: user_orders
+          schema: public
+  - name: orders_products
+    using:
+      foreign_key_constraint_on:
+        column: order_id
+        table:
+          name: orders_products
+          schema: public

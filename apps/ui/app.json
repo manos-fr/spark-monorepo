@@ -6,9 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "extra": {
-      "eas": {
-        "projectId": "39f9a38d-9560-48a4-9380-571dfbcbbd21"
-      }
+      // "eas": {
+      //   "projectId": "39f9a38d-9560-48a4-9380-571dfbcbbd21"
+      // }
     },
     "runtimeVersion": {
       "policy": "appVersion"

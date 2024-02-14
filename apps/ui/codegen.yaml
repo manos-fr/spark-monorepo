@@ -1,5 +1,5 @@
 schema:
-  - http://localhost:8082/v1/graphql:
+  - http://localhost:8083/v1/graphql:
       headers:
         'x-hasura-admin-secret': 'jijikos'
 documents: ['./src/**/gql-model.ts', './src/graphql/models']

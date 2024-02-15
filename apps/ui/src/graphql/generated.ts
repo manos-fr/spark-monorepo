@@ -4116,11 +4116,11 @@ export type Users_Variance_Fields = {
 };
 
 export type AddUserMutationVariables = Exact<{
-  user: Users_Insert_Input;
+  objects: Array<Users_Insert_Input> | Users_Insert_Input;
 }>;
 
 
-export type AddUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: number } | null };
+export type AddUserMutation = { __typename?: 'mutation_root', insert_users?: { __typename?: 'users_mutation_response', affected_rows: number } | null };
 
 export type GetUsersByPkQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4136,9 +4136,9 @@ export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typena
 
 
 export const AddUserDocument = `
-    mutation addUser($user: users_insert_input!) {
-  insert_users_one(object: $user) {
-    id
+    mutation addUser($objects: [users_insert_input!]!) {
+  insert_users(objects: $objects) {
+    affected_rows
   }
 }
     `;

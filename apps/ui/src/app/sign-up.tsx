@@ -11,19 +11,35 @@ import tw from 'twrnc';
 import { useAuthStore } from '../state/useStore';
 import { useRef } from 'react';
 import { useRouter } from 'expo-router';
+import { useAddUserMutation } from '../graphql/generated';
+import { useGraphQlClient } from '../hooks/useGraphQlClient';
 
 export const SignUp = () => {
   const { auth, appRegister } = useAuthStore((state) => state);
   const router = useRouter();
   const emailRef = useRef('');
   const passwordRef = useRef('');
+  const { mutateAsync } = useAddUserMutation(useGraphQlClient());
 
   const handleRegister = async () => {
-    const registerResp = await appRegister(auth, {
-      email: emailRef.current as unknown as string,
-      password: passwordRef.current as unknown as string,
+    const { user } = await appRegister(auth, {
+      email: emailRef.current,
+      password: passwordRef.current,
     });
-    if (registerResp.user) {
+    if (user) {
+      try {
+        const objects = {
+          objects: {
+            uid: user.uid,
+            email: user.email,
+            name: user.displayName || '',
+          },
+        };
+
+        await mutateAsync(objects);
+      } catch (error) {
+        console.log({ error });
+      }
       router.replace('/home');
     }
   };

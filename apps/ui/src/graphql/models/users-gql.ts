@@ -1,9 +1,9 @@
 import { gql } from 'graphql-request';
 
 export const addUser = gql`
-  mutation addUser($user: users_insert_input!) {
-    insert_users_one(object: $user) {
-      id
+  mutation addUser($objects: [users_insert_input!]!) {
+    insert_users(objects: $objects) {
+      affected_rows
     }
   }
 `;

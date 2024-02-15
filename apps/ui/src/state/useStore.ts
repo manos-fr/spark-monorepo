@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   Auth,
   signOut,
+  User,
 } from 'firebase/auth';
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -37,7 +38,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   loginError: undefined,
   registerError: undefined,
   generalError: undefined,
-  appRegister: async (auth: Auth | null, credentials: Credentials) => {
+  appRegister: async (
+    auth: Auth | null,
+    credentials: Credentials,
+  ): Promise<{
+    isLoggedIn: boolean;
+    user: User;
+  }> => {
     const { email, password } = credentials;
     try {
       const { user } = await createUserWithEmailAndPassword(
@@ -46,10 +53,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         password as string,
       );
       set(() => ({ user, isLoggedIn: true }));
-      return { isLoggedIn: get().isLoggedIn, user };
+      return { isLoggedIn: get().isLoggedIn, user } satisfies {
+        isLoggedIn: boolean;
+        user: User;
+      };
     } catch (error: any) {
       console.log(error);
-      set(() => ({ registerError: error.message }));
+      set(() => ({ registerError: error?.message }));
+      throw new Error(error);
     }
   },
   appLogin: async (auth: Auth | null, credentials: Credentials) => {
@@ -61,15 +72,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         password as string,
       );
       set(() => ({ user, isLoggedIn: true }));
-      return { isLoggedIn: get().isLoggedIn, user };
+      return { isLoggedIn: get().isLoggedIn, user } satisfies {
+        isLoggedIn: boolean;
+        user: User;
+      };
     } catch (error: any) {
       console.log(error);
-      set({ loginError: error.message });
+      set({ loginError: error?.message });
+      throw new Error(error);
     }
   },
   appSignOut: async (auth: Auth | null) => {
     try {
-      const appSignOutResponse = await signOut(auth as Auth);
+      await signOut(auth as Auth);
       set(() => ({
         user: null,
         isLoggedIn: false,
@@ -77,9 +92,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         loginError: undefined,
         registerError: undefined,
       }));
-      return { isLoggedIn: get().isLoggedIn, appSignOutResponse };
+      return { isLoggedIn: get().isLoggedIn } satisfies { isLoggedIn: boolean };
     } catch (error: any) {
       console.log(error);
+      throw new Error(error);
     }
   },
 }));

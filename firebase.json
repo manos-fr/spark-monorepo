@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "predeploy": [
+      "npm run lint --prefix /Users/mka/repos/spark-monorepo --target functions",
+      "npm run build --prefix /Users/mka/repos/spark-monorepo --prod --target functions"
+    ],
+    "source": "/"
+  }
+}

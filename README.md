@@ -60,6 +60,18 @@ npm run reset-infra
 npm run update-schema
 ```
 
+- Start firebase-admin service
+
+```
+nx serve firebase-admin
+```
+
+- Delete all firebase auth users
+
+```
+npm run delete-users
+```
+
 ## Notes
 
 - make sure to have all recommended extensions installed in VS code

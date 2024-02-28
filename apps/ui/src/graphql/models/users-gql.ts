@@ -3,6 +3,9 @@ import { gql } from 'graphql-request';
 export const addUser = gql`
   mutation addUser($objects: [users_insert_input!]!) {
     insert_users(objects: $objects) {
+      returning {
+        id
+      }
       affected_rows
     }
   }
@@ -26,6 +29,23 @@ export const getUsers = gql`
       updated_at
       created_at
       last_seen
+    }
+  }
+`;
+
+export const updateUserLastSeen = gql`
+  mutation updateUserLastSeen($id: Int!) {
+    update_users_by_pk(pk_columns: { id: $id }, _set: { last_seen: "now()" }) {
+      id
+      last_seen
+    }
+  }
+`;
+
+export const getUser = gql`
+  query getUser($uid: String_comparison_exp!) {
+    users(where: { uid: $uid }) {
+      id
     }
   }
 `;

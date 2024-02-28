@@ -13,16 +13,15 @@ export default function Index() {
     if (!navigationState?.key) return;
 
     if (
-      isLoggedIn &&
       user &&
       !registerError &&
-      !generalError?.response?.errors[0]?.message.includes(
+      !generalError?.response?.errors[0]?.message?.includes(
         'Could not verify JWT: JWSError',
       )
     ) {
       router.replace('/home');
     } else {
-      router.push('/sign-up');
+      router.replace('/sign-up');
     }
   }, [
     generalError?.response?.errors,

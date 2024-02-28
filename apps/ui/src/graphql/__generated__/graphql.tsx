@@ -1,6 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
-import { RequestInit } from 'graphql-request/dist/types.dom';
-import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -8,14 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-
-function fetcher<TData, TVariables extends { [key: string]: any }>(client: GraphQLClient, query: string, variables?: TVariables, requestHeaders?: RequestInit['headers']) {
-  return async (): Promise<TData> => client.request({
-    document: query,
-    variables,
-    requestHeaders
-  });
-}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -109,9 +101,345 @@ export type Jsonb_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['jsonb']['input']>>;
 };
 
+/** columns and relationships of "messages" */
+export type Messages = {
+  __typename?: 'messages';
+  id: Scalars['Int']['output'];
+  text: Scalars['String']['output'];
+  timestamp: Scalars['timestamptz']['output'];
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars['Int']['output'];
+};
+
+/** aggregated selection of "messages" */
+export type Messages_Aggregate = {
+  __typename?: 'messages_aggregate';
+  aggregate?: Maybe<Messages_Aggregate_Fields>;
+  nodes: Array<Messages>;
+};
+
+export type Messages_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Messages_Aggregate_Bool_Exp_Count>;
+};
+
+export type Messages_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Messages_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Messages_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "messages" */
+export type Messages_Aggregate_Fields = {
+  __typename?: 'messages_aggregate_fields';
+  avg?: Maybe<Messages_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<Messages_Max_Fields>;
+  min?: Maybe<Messages_Min_Fields>;
+  stddev?: Maybe<Messages_Stddev_Fields>;
+  stddev_pop?: Maybe<Messages_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Messages_Stddev_Samp_Fields>;
+  sum?: Maybe<Messages_Sum_Fields>;
+  var_pop?: Maybe<Messages_Var_Pop_Fields>;
+  var_samp?: Maybe<Messages_Var_Samp_Fields>;
+  variance?: Maybe<Messages_Variance_Fields>;
+};
+
+
+/** aggregate fields of "messages" */
+export type Messages_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Messages_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "messages" */
+export type Messages_Aggregate_Order_By = {
+  avg?: InputMaybe<Messages_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Messages_Max_Order_By>;
+  min?: InputMaybe<Messages_Min_Order_By>;
+  stddev?: InputMaybe<Messages_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Messages_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Messages_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Messages_Sum_Order_By>;
+  var_pop?: InputMaybe<Messages_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Messages_Var_Samp_Order_By>;
+  variance?: InputMaybe<Messages_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "messages" */
+export type Messages_Arr_Rel_Insert_Input = {
+  data: Array<Messages_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Messages_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Messages_Avg_Fields = {
+  __typename?: 'messages_avg_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by avg() on columns of table "messages" */
+export type Messages_Avg_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "messages". All fields are combined with a logical 'AND'. */
+export type Messages_Bool_Exp = {
+  _and?: InputMaybe<Array<Messages_Bool_Exp>>;
+  _not?: InputMaybe<Messages_Bool_Exp>;
+  _or?: InputMaybe<Array<Messages_Bool_Exp>>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  text?: InputMaybe<String_Comparison_Exp>;
+  timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "messages" */
+export enum Messages_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  MessagesPkey = 'messages_pkey'
+}
+
+/** input type for incrementing numeric columns in table "messages" */
+export type Messages_Inc_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "messages" */
+export type Messages_Insert_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['timestamptz']['input']>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** aggregate max on columns */
+export type Messages_Max_Fields = {
+  __typename?: 'messages_max_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  timestamp?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by max() on columns of table "messages" */
+export type Messages_Max_Order_By = {
+  id?: InputMaybe<Order_By>;
+  text?: InputMaybe<Order_By>;
+  timestamp?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Messages_Min_Fields = {
+  __typename?: 'messages_min_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  timestamp?: Maybe<Scalars['timestamptz']['output']>;
+  user_id?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by min() on columns of table "messages" */
+export type Messages_Min_Order_By = {
+  id?: InputMaybe<Order_By>;
+  text?: InputMaybe<Order_By>;
+  timestamp?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "messages" */
+export type Messages_Mutation_Response = {
+  __typename?: 'messages_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Messages>;
+};
+
+/** on_conflict condition type for table "messages" */
+export type Messages_On_Conflict = {
+  constraint: Messages_Constraint;
+  update_columns?: Array<Messages_Update_Column>;
+  where?: InputMaybe<Messages_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "messages". */
+export type Messages_Order_By = {
+  id?: InputMaybe<Order_By>;
+  text?: InputMaybe<Order_By>;
+  timestamp?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: messages */
+export type Messages_Pk_Columns_Input = {
+  id: Scalars['Int']['input'];
+};
+
+/** select columns of table "messages" */
+export enum Messages_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Text = 'text',
+  /** column name */
+  Timestamp = 'timestamp',
+  /** column name */
+  UserId = 'user_id'
+}
+
+/** input type for updating data in table "messages" */
+export type Messages_Set_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type Messages_Stddev_Fields = {
+  __typename?: 'messages_stddev_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev() on columns of table "messages" */
+export type Messages_Stddev_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Messages_Stddev_Pop_Fields = {
+  __typename?: 'messages_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev_pop() on columns of table "messages" */
+export type Messages_Stddev_Pop_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Messages_Stddev_Samp_Fields = {
+  __typename?: 'messages_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by stddev_samp() on columns of table "messages" */
+export type Messages_Stddev_Samp_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "messages" */
+export type Messages_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Messages_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Messages_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** aggregate sum on columns */
+export type Messages_Sum_Fields = {
+  __typename?: 'messages_sum_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  user_id?: Maybe<Scalars['Int']['output']>;
+};
+
+/** order by sum() on columns of table "messages" */
+export type Messages_Sum_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "messages" */
+export enum Messages_Update_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Text = 'text',
+  /** column name */
+  Timestamp = 'timestamp',
+  /** column name */
+  UserId = 'user_id'
+}
+
+export type Messages_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Messages_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Messages_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Messages_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Messages_Var_Pop_Fields = {
+  __typename?: 'messages_var_pop_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by var_pop() on columns of table "messages" */
+export type Messages_Var_Pop_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Messages_Var_Samp_Fields = {
+  __typename?: 'messages_var_samp_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by var_samp() on columns of table "messages" */
+export type Messages_Var_Samp_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Messages_Variance_Fields = {
+  __typename?: 'messages_variance_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  user_id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** order by variance() on columns of table "messages" */
+export type Messages_Variance_Order_By = {
+  id?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
+};
+
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
+  /** delete data from the table: "messages" */
+  delete_messages?: Maybe<Messages_Mutation_Response>;
+  /** delete single row from the table: "messages" */
+  delete_messages_by_pk?: Maybe<Messages>;
   /** delete data from the table: "orders" */
   delete_orders?: Maybe<Orders_Mutation_Response>;
   /** delete single row from the table: "orders" */
@@ -128,6 +456,8 @@ export type Mutation_Root = {
   delete_roles?: Maybe<Roles_Mutation_Response>;
   /** delete single row from the table: "roles" */
   delete_roles_by_pk?: Maybe<Roles>;
+  /** delete data from the table: "user_online" */
+  delete_user_online?: Maybe<User_Online_Mutation_Response>;
   /** delete data from the table: "user_orders" */
   delete_user_orders?: Maybe<User_Orders_Mutation_Response>;
   /** delete single row from the table: "user_orders" */
@@ -140,10 +470,16 @@ export type Mutation_Root = {
   delete_user_roles?: Maybe<User_Roles_Mutation_Response>;
   /** delete single row from the table: "user_roles" */
   delete_user_roles_by_pk?: Maybe<User_Roles>;
+  /** delete data from the table: "user_typing" */
+  delete_user_typing?: Maybe<User_Typing_Mutation_Response>;
   /** delete data from the table: "users" */
   delete_users?: Maybe<Users_Mutation_Response>;
   /** delete single row from the table: "users" */
   delete_users_by_pk?: Maybe<Users>;
+  /** insert data into the table: "messages" */
+  insert_messages?: Maybe<Messages_Mutation_Response>;
+  /** insert a single row into the table: "messages" */
+  insert_messages_one?: Maybe<Messages>;
   /** insert data into the table: "orders" */
   insert_orders?: Maybe<Orders_Mutation_Response>;
   /** insert a single row into the table: "orders" */
@@ -160,6 +496,10 @@ export type Mutation_Root = {
   insert_roles?: Maybe<Roles_Mutation_Response>;
   /** insert a single row into the table: "roles" */
   insert_roles_one?: Maybe<Roles>;
+  /** insert data into the table: "user_online" */
+  insert_user_online?: Maybe<User_Online_Mutation_Response>;
+  /** insert a single row into the table: "user_online" */
+  insert_user_online_one?: Maybe<User_Online>;
   /** insert data into the table: "user_orders" */
   insert_user_orders?: Maybe<User_Orders_Mutation_Response>;
   /** insert a single row into the table: "user_orders" */
@@ -172,10 +512,20 @@ export type Mutation_Root = {
   insert_user_roles?: Maybe<User_Roles_Mutation_Response>;
   /** insert a single row into the table: "user_roles" */
   insert_user_roles_one?: Maybe<User_Roles>;
+  /** insert data into the table: "user_typing" */
+  insert_user_typing?: Maybe<User_Typing_Mutation_Response>;
+  /** insert a single row into the table: "user_typing" */
+  insert_user_typing_one?: Maybe<User_Typing>;
   /** insert data into the table: "users" */
   insert_users?: Maybe<Users_Mutation_Response>;
   /** insert a single row into the table: "users" */
   insert_users_one?: Maybe<Users>;
+  /** update data of the table: "messages" */
+  update_messages?: Maybe<Messages_Mutation_Response>;
+  /** update single row of the table: "messages" */
+  update_messages_by_pk?: Maybe<Messages>;
+  /** update multiples rows of table: "messages" */
+  update_messages_many?: Maybe<Array<Maybe<Messages_Mutation_Response>>>;
   /** update data of the table: "orders" */
   update_orders?: Maybe<Orders_Mutation_Response>;
   /** update single row of the table: "orders" */
@@ -200,6 +550,10 @@ export type Mutation_Root = {
   update_roles_by_pk?: Maybe<Roles>;
   /** update multiples rows of table: "roles" */
   update_roles_many?: Maybe<Array<Maybe<Roles_Mutation_Response>>>;
+  /** update data of the table: "user_online" */
+  update_user_online?: Maybe<User_Online_Mutation_Response>;
+  /** update multiples rows of table: "user_online" */
+  update_user_online_many?: Maybe<Array<Maybe<User_Online_Mutation_Response>>>;
   /** update data of the table: "user_orders" */
   update_user_orders?: Maybe<User_Orders_Mutation_Response>;
   /** update single row of the table: "user_orders" */
@@ -218,12 +572,28 @@ export type Mutation_Root = {
   update_user_roles_by_pk?: Maybe<User_Roles>;
   /** update multiples rows of table: "user_roles" */
   update_user_roles_many?: Maybe<Array<Maybe<User_Roles_Mutation_Response>>>;
+  /** update data of the table: "user_typing" */
+  update_user_typing?: Maybe<User_Typing_Mutation_Response>;
+  /** update multiples rows of table: "user_typing" */
+  update_user_typing_many?: Maybe<Array<Maybe<User_Typing_Mutation_Response>>>;
   /** update data of the table: "users" */
   update_users?: Maybe<Users_Mutation_Response>;
   /** update single row of the table: "users" */
   update_users_by_pk?: Maybe<Users>;
   /** update multiples rows of table: "users" */
   update_users_many?: Maybe<Array<Maybe<Users_Mutation_Response>>>;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_MessagesArgs = {
+  where: Messages_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Messages_By_PkArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -278,6 +648,12 @@ export type Mutation_RootDelete_Roles_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_User_OnlineArgs = {
+  where: User_Online_Bool_Exp;
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_User_OrdersArgs = {
   where: User_Orders_Bool_Exp;
 };
@@ -318,6 +694,12 @@ export type Mutation_RootDelete_User_Roles_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_User_TypingArgs = {
+  where: User_Typing_Bool_Exp;
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_UsersArgs = {
   where: Users_Bool_Exp;
 };
@@ -326,6 +708,20 @@ export type Mutation_RootDelete_UsersArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Users_By_PkArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_MessagesArgs = {
+  objects: Array<Messages_Insert_Input>;
+  on_conflict?: InputMaybe<Messages_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Messages_OneArgs = {
+  object: Messages_Insert_Input;
+  on_conflict?: InputMaybe<Messages_On_Conflict>;
 };
 
 
@@ -386,6 +782,18 @@ export type Mutation_RootInsert_Roles_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_User_OnlineArgs = {
+  objects: Array<User_Online_Insert_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_User_Online_OneArgs = {
+  object: User_Online_Insert_Input;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_User_OrdersArgs = {
   objects: Array<User_Orders_Insert_Input>;
   on_conflict?: InputMaybe<User_Orders_On_Conflict>;
@@ -428,6 +836,18 @@ export type Mutation_RootInsert_User_Roles_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_User_TypingArgs = {
+  objects: Array<User_Typing_Insert_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_User_Typing_OneArgs = {
+  object: User_Typing_Insert_Input;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_UsersArgs = {
   objects: Array<Users_Insert_Input>;
   on_conflict?: InputMaybe<Users_On_Conflict>;
@@ -438,6 +858,28 @@ export type Mutation_RootInsert_UsersArgs = {
 export type Mutation_RootInsert_Users_OneArgs = {
   object: Users_Insert_Input;
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_MessagesArgs = {
+  _inc?: InputMaybe<Messages_Inc_Input>;
+  _set?: InputMaybe<Messages_Set_Input>;
+  where: Messages_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Messages_By_PkArgs = {
+  _inc?: InputMaybe<Messages_Inc_Input>;
+  _set?: InputMaybe<Messages_Set_Input>;
+  pk_columns: Messages_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Messages_ManyArgs = {
+  updates: Array<Messages_Updates>;
 };
 
 
@@ -540,6 +982,20 @@ export type Mutation_RootUpdate_Roles_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_User_OnlineArgs = {
+  _inc?: InputMaybe<User_Online_Inc_Input>;
+  _set?: InputMaybe<User_Online_Set_Input>;
+  where: User_Online_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_User_Online_ManyArgs = {
+  updates: Array<User_Online_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_User_OrdersArgs = {
   _inc?: InputMaybe<User_Orders_Inc_Input>;
   _set?: InputMaybe<User_Orders_Set_Input>;
@@ -602,6 +1058,20 @@ export type Mutation_RootUpdate_User_Roles_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_User_Roles_ManyArgs = {
   updates: Array<User_Roles_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_User_TypingArgs = {
+  _inc?: InputMaybe<User_Typing_Inc_Input>;
+  _set?: InputMaybe<User_Typing_Set_Input>;
+  where: User_Typing_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_User_Typing_ManyArgs = {
+  updates: Array<User_Typing_Updates>;
 };
 
 
@@ -1730,6 +2200,12 @@ export type Products_Variance_Order_By = {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  /** An array relationship */
+  messages: Array<Messages>;
+  /** An aggregate relationship */
+  messages_aggregate: Messages_Aggregate;
+  /** fetch data from the table: "messages" using primary key columns */
+  messages_by_pk?: Maybe<Messages>;
   /** fetch data from the table: "orders" */
   orders: Array<Orders>;
   /** fetch aggregated fields from the table: "orders" */
@@ -1754,6 +2230,10 @@ export type Query_Root = {
   roles_aggregate: Roles_Aggregate;
   /** fetch data from the table: "roles" using primary key columns */
   roles_by_pk?: Maybe<Roles>;
+  /** fetch data from the table: "user_online" */
+  user_online: Array<User_Online>;
+  /** fetch aggregated fields from the table: "user_online" */
+  user_online_aggregate: User_Online_Aggregate;
   /** fetch data from the table: "user_orders" */
   user_orders: Array<User_Orders>;
   /** fetch aggregated fields from the table: "user_orders" */
@@ -1772,12 +2252,39 @@ export type Query_Root = {
   user_roles_aggregate: User_Roles_Aggregate;
   /** fetch data from the table: "user_roles" using primary key columns */
   user_roles_by_pk?: Maybe<User_Roles>;
+  /** fetch data from the table: "user_typing" */
+  user_typing: Array<User_Typing>;
+  /** fetch aggregated fields from the table: "user_typing" */
+  user_typing_aggregate: User_Typing_Aggregate;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
   users_aggregate: Users_Aggregate;
   /** fetch data from the table: "users" using primary key columns */
   users_by_pk?: Maybe<Users>;
+};
+
+
+export type Query_RootMessagesArgs = {
+  distinct_on?: InputMaybe<Array<Messages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Messages_Order_By>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
+};
+
+
+export type Query_RootMessages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Messages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Messages_Order_By>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
+};
+
+
+export type Query_RootMessages_By_PkArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -1875,6 +2382,24 @@ export type Query_RootRoles_By_PkArgs = {
 };
 
 
+export type Query_RootUser_OnlineArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
+export type Query_RootUser_Online_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
 export type Query_RootUser_OrdersArgs = {
   distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1945,6 +2470,24 @@ export type Query_RootUser_Roles_By_PkArgs = {
   id: Scalars['Int']['input'];
   role_id: Scalars['Int']['input'];
   user_id: Scalars['Int']['input'];
+};
+
+
+export type Query_RootUser_TypingArgs = {
+  distinct_on?: InputMaybe<Array<User_Typing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Typing_Order_By>>;
+  where?: InputMaybe<User_Typing_Bool_Exp>;
+};
+
+
+export type Query_RootUser_Typing_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Typing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Typing_Order_By>>;
+  where?: InputMaybe<User_Typing_Bool_Exp>;
 };
 
 
@@ -2240,6 +2783,14 @@ export type Roles_Variance_Fields = {
 
 export type Subscription_Root = {
   __typename?: 'subscription_root';
+  /** An array relationship */
+  messages: Array<Messages>;
+  /** An aggregate relationship */
+  messages_aggregate: Messages_Aggregate;
+  /** fetch data from the table: "messages" using primary key columns */
+  messages_by_pk?: Maybe<Messages>;
+  /** fetch data from the table in a streaming manner: "messages" */
+  messages_stream: Array<Messages>;
   /** fetch data from the table: "orders" */
   orders: Array<Orders>;
   /** fetch aggregated fields from the table: "orders" */
@@ -2272,6 +2823,12 @@ export type Subscription_Root = {
   roles_by_pk?: Maybe<Roles>;
   /** fetch data from the table in a streaming manner: "roles" */
   roles_stream: Array<Roles>;
+  /** fetch data from the table: "user_online" */
+  user_online: Array<User_Online>;
+  /** fetch aggregated fields from the table: "user_online" */
+  user_online_aggregate: User_Online_Aggregate;
+  /** fetch data from the table in a streaming manner: "user_online" */
+  user_online_stream: Array<User_Online>;
   /** fetch data from the table: "user_orders" */
   user_orders: Array<User_Orders>;
   /** fetch aggregated fields from the table: "user_orders" */
@@ -2296,6 +2853,12 @@ export type Subscription_Root = {
   user_roles_by_pk?: Maybe<User_Roles>;
   /** fetch data from the table in a streaming manner: "user_roles" */
   user_roles_stream: Array<User_Roles>;
+  /** fetch data from the table: "user_typing" */
+  user_typing: Array<User_Typing>;
+  /** fetch aggregated fields from the table: "user_typing" */
+  user_typing_aggregate: User_Typing_Aggregate;
+  /** fetch data from the table in a streaming manner: "user_typing" */
+  user_typing_stream: Array<User_Typing>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -2304,6 +2867,36 @@ export type Subscription_Root = {
   users_by_pk?: Maybe<Users>;
   /** fetch data from the table in a streaming manner: "users" */
   users_stream: Array<Users>;
+};
+
+
+export type Subscription_RootMessagesArgs = {
+  distinct_on?: InputMaybe<Array<Messages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Messages_Order_By>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
+};
+
+
+export type Subscription_RootMessages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Messages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Messages_Order_By>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
+};
+
+
+export type Subscription_RootMessages_By_PkArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type Subscription_RootMessages_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Messages_Stream_Cursor_Input>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
 };
 
 
@@ -2429,6 +3022,31 @@ export type Subscription_RootRoles_StreamArgs = {
 };
 
 
+export type Subscription_RootUser_OnlineArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_Online_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Online_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Online_Order_By>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_Online_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<User_Online_Stream_Cursor_Input>>;
+  where?: InputMaybe<User_Online_Bool_Exp>;
+};
+
+
 export type Subscription_RootUser_OrdersArgs = {
   distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -2523,6 +3141,31 @@ export type Subscription_RootUser_Roles_StreamArgs = {
 };
 
 
+export type Subscription_RootUser_TypingArgs = {
+  distinct_on?: InputMaybe<Array<User_Typing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Typing_Order_By>>;
+  where?: InputMaybe<User_Typing_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_Typing_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Typing_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Typing_Order_By>>;
+  where?: InputMaybe<User_Typing_Bool_Exp>;
+};
+
+
+export type Subscription_RootUser_Typing_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<User_Typing_Stream_Cursor_Input>>;
+  where?: InputMaybe<User_Typing_Bool_Exp>;
+};
+
+
 export type Subscription_RootUsersArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -2563,6 +3206,197 @@ export type Timestamptz_Comparison_Exp = {
   _lte?: InputMaybe<Scalars['timestamptz']['input']>;
   _neq?: InputMaybe<Scalars['timestamptz']['input']>;
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
+};
+
+/** columns and relationships of "user_online" */
+export type User_Online = {
+  __typename?: 'user_online';
+  id?: Maybe<Scalars['Int']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "user_online" */
+export type User_Online_Aggregate = {
+  __typename?: 'user_online_aggregate';
+  aggregate?: Maybe<User_Online_Aggregate_Fields>;
+  nodes: Array<User_Online>;
+};
+
+/** aggregate fields of "user_online" */
+export type User_Online_Aggregate_Fields = {
+  __typename?: 'user_online_aggregate_fields';
+  avg?: Maybe<User_Online_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<User_Online_Max_Fields>;
+  min?: Maybe<User_Online_Min_Fields>;
+  stddev?: Maybe<User_Online_Stddev_Fields>;
+  stddev_pop?: Maybe<User_Online_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<User_Online_Stddev_Samp_Fields>;
+  sum?: Maybe<User_Online_Sum_Fields>;
+  var_pop?: Maybe<User_Online_Var_Pop_Fields>;
+  var_samp?: Maybe<User_Online_Var_Samp_Fields>;
+  variance?: Maybe<User_Online_Variance_Fields>;
+};
+
+
+/** aggregate fields of "user_online" */
+export type User_Online_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<User_Online_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type User_Online_Avg_Fields = {
+  __typename?: 'user_online_avg_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "user_online". All fields are combined with a logical 'AND'. */
+export type User_Online_Bool_Exp = {
+  _and?: InputMaybe<Array<User_Online_Bool_Exp>>;
+  _not?: InputMaybe<User_Online_Bool_Exp>;
+  _or?: InputMaybe<Array<User_Online_Bool_Exp>>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  last_seen?: InputMaybe<Timestamptz_Comparison_Exp>;
+  last_typed?: InputMaybe<Timestamptz_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "user_online" */
+export type User_Online_Inc_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "user_online" */
+export type User_Online_Insert_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type User_Online_Max_Fields = {
+  __typename?: 'user_online_max_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type User_Online_Min_Fields = {
+  __typename?: 'user_online_min_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "user_online" */
+export type User_Online_Mutation_Response = {
+  __typename?: 'user_online_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<User_Online>;
+};
+
+/** Ordering options when selecting data from "user_online". */
+export type User_Online_Order_By = {
+  id?: InputMaybe<Order_By>;
+  last_seen?: InputMaybe<Order_By>;
+  last_typed?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "user_online" */
+export enum User_Online_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  LastTyped = 'last_typed',
+  /** column name */
+  Name = 'name'
+}
+
+/** input type for updating data in table "user_online" */
+export type User_Online_Set_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type User_Online_Stddev_Fields = {
+  __typename?: 'user_online_stddev_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type User_Online_Stddev_Pop_Fields = {
+  __typename?: 'user_online_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type User_Online_Stddev_Samp_Fields = {
+  __typename?: 'user_online_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "user_online" */
+export type User_Online_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: User_Online_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type User_Online_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type User_Online_Sum_Fields = {
+  __typename?: 'user_online_sum_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+};
+
+export type User_Online_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<User_Online_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<User_Online_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: User_Online_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type User_Online_Var_Pop_Fields = {
+  __typename?: 'user_online_var_pop_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type User_Online_Var_Samp_Fields = {
+  __typename?: 'user_online_var_samp_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type User_Online_Variance_Fields = {
+  __typename?: 'user_online_variance_fields';
+  id?: Maybe<Scalars['Float']['output']>;
 };
 
 /** columns and relationships of "user_orders" */
@@ -3681,6 +4515,197 @@ export type User_Roles_Variance_Order_By = {
   user_id?: InputMaybe<Order_By>;
 };
 
+/** columns and relationships of "user_typing" */
+export type User_Typing = {
+  __typename?: 'user_typing';
+  id?: Maybe<Scalars['Int']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "user_typing" */
+export type User_Typing_Aggregate = {
+  __typename?: 'user_typing_aggregate';
+  aggregate?: Maybe<User_Typing_Aggregate_Fields>;
+  nodes: Array<User_Typing>;
+};
+
+/** aggregate fields of "user_typing" */
+export type User_Typing_Aggregate_Fields = {
+  __typename?: 'user_typing_aggregate_fields';
+  avg?: Maybe<User_Typing_Avg_Fields>;
+  count: Scalars['Int']['output'];
+  max?: Maybe<User_Typing_Max_Fields>;
+  min?: Maybe<User_Typing_Min_Fields>;
+  stddev?: Maybe<User_Typing_Stddev_Fields>;
+  stddev_pop?: Maybe<User_Typing_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<User_Typing_Stddev_Samp_Fields>;
+  sum?: Maybe<User_Typing_Sum_Fields>;
+  var_pop?: Maybe<User_Typing_Var_Pop_Fields>;
+  var_samp?: Maybe<User_Typing_Var_Samp_Fields>;
+  variance?: Maybe<User_Typing_Variance_Fields>;
+};
+
+
+/** aggregate fields of "user_typing" */
+export type User_Typing_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<User_Typing_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** aggregate avg on columns */
+export type User_Typing_Avg_Fields = {
+  __typename?: 'user_typing_avg_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Boolean expression to filter rows from the table "user_typing". All fields are combined with a logical 'AND'. */
+export type User_Typing_Bool_Exp = {
+  _and?: InputMaybe<Array<User_Typing_Bool_Exp>>;
+  _not?: InputMaybe<User_Typing_Bool_Exp>;
+  _or?: InputMaybe<Array<User_Typing_Bool_Exp>>;
+  id?: InputMaybe<Int_Comparison_Exp>;
+  last_seen?: InputMaybe<Timestamptz_Comparison_Exp>;
+  last_typed?: InputMaybe<Timestamptz_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "user_typing" */
+export type User_Typing_Inc_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** input type for inserting data into table "user_typing" */
+export type User_Typing_Insert_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type User_Typing_Max_Fields = {
+  __typename?: 'user_typing_max_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type User_Typing_Min_Fields = {
+  __typename?: 'user_typing_min_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+  last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "user_typing" */
+export type User_Typing_Mutation_Response = {
+  __typename?: 'user_typing_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<User_Typing>;
+};
+
+/** Ordering options when selecting data from "user_typing". */
+export type User_Typing_Order_By = {
+  id?: InputMaybe<Order_By>;
+  last_seen?: InputMaybe<Order_By>;
+  last_typed?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "user_typing" */
+export enum User_Typing_Select_Column {
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  LastTyped = 'last_typed',
+  /** column name */
+  Name = 'name'
+}
+
+/** input type for updating data in table "user_typing" */
+export type User_Typing_Set_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate stddev on columns */
+export type User_Typing_Stddev_Fields = {
+  __typename?: 'user_typing_stddev_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type User_Typing_Stddev_Pop_Fields = {
+  __typename?: 'user_typing_stddev_pop_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type User_Typing_Stddev_Samp_Fields = {
+  __typename?: 'user_typing_stddev_samp_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** Streaming cursor of the table "user_typing" */
+export type User_Typing_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: User_Typing_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type User_Typing_Stream_Cursor_Value_Input = {
+  id?: InputMaybe<Scalars['Int']['input']>;
+  last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type User_Typing_Sum_Fields = {
+  __typename?: 'user_typing_sum_fields';
+  id?: Maybe<Scalars['Int']['output']>;
+};
+
+export type User_Typing_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<User_Typing_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<User_Typing_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: User_Typing_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type User_Typing_Var_Pop_Fields = {
+  __typename?: 'user_typing_var_pop_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate var_samp on columns */
+export type User_Typing_Var_Samp_Fields = {
+  __typename?: 'user_typing_var_samp_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+/** aggregate variance on columns */
+export type User_Typing_Variance_Fields = {
+  __typename?: 'user_typing_variance_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users';
@@ -3688,7 +4713,12 @@ export type Users = {
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   last_seen: Scalars['timestamptz']['output'];
-  name: Scalars['String']['output'];
+  last_typed: Scalars['timestamptz']['output'];
+  /** An array relationship */
+  messages: Array<Messages>;
+  /** An aggregate relationship */
+  messages_aggregate: Messages_Aggregate;
+  name?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   owner: Array<User_Relationships>;
   /** An aggregate relationship */
@@ -3701,7 +4731,7 @@ export type Users = {
   supplier: Array<User_Relationships>;
   /** An aggregate relationship */
   supplier_aggregate: User_Relationships_Aggregate;
-  uid?: Maybe<Scalars['String']['output']>;
+  uid: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
   /** An array relationship */
   user_1: Array<User_Orders>;
@@ -3715,6 +4745,26 @@ export type Users = {
   user_role: Array<User_Roles>;
   /** An aggregate relationship */
   user_role_aggregate: User_Roles_Aggregate;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersMessagesArgs = {
+  distinct_on?: InputMaybe<Array<Messages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Messages_Order_By>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersMessages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Messages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Messages_Order_By>>;
+  where?: InputMaybe<Messages_Bool_Exp>;
 };
 
 
@@ -3882,6 +4932,9 @@ export type Users_Bool_Exp = {
   email?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   last_seen?: InputMaybe<Timestamptz_Comparison_Exp>;
+  last_typed?: InputMaybe<Timestamptz_Comparison_Exp>;
+  messages?: InputMaybe<Messages_Bool_Exp>;
+  messages_aggregate?: InputMaybe<Messages_Aggregate_Bool_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   owner?: InputMaybe<User_Relationships_Bool_Exp>;
   owner_aggregate?: InputMaybe<User_Relationships_Aggregate_Bool_Exp>;
@@ -3918,6 +4971,8 @@ export type Users_Insert_Input = {
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
+  messages?: InputMaybe<Messages_Arr_Rel_Insert_Input>;
   name?: InputMaybe<Scalars['String']['input']>;
   owner?: InputMaybe<User_Relationships_Arr_Rel_Insert_Input>;
   products?: InputMaybe<Products_Arr_Rel_Insert_Input>;
@@ -3936,6 +4991,7 @@ export type Users_Max_Fields = {
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   uid?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3948,6 +5004,7 @@ export type Users_Min_Fields = {
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   last_seen?: Maybe<Scalars['timestamptz']['output']>;
+  last_typed?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   uid?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -3982,6 +5039,8 @@ export type Users_Order_By = {
   email?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   last_seen?: InputMaybe<Order_By>;
+  last_typed?: InputMaybe<Order_By>;
+  messages_aggregate?: InputMaybe<Messages_Aggregate_Order_By>;
   name?: InputMaybe<Order_By>;
   owner_aggregate?: InputMaybe<User_Relationships_Aggregate_Order_By>;
   products_aggregate?: InputMaybe<Products_Aggregate_Order_By>;
@@ -4009,6 +5068,8 @@ export enum Users_Select_Column {
   /** column name */
   LastSeen = 'last_seen',
   /** column name */
+  LastTyped = 'last_typed',
+  /** column name */
   Name = 'name',
   /** column name */
   Uid = 'uid',
@@ -4022,6 +5083,7 @@ export type Users_Set_Input = {
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   uid?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -4059,6 +5121,7 @@ export type Users_Stream_Cursor_Value_Input = {
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   uid?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
@@ -4080,6 +5143,8 @@ export enum Users_Update_Column {
   Id = 'id',
   /** column name */
   LastSeen = 'last_seen',
+  /** column name */
+  LastTyped = 'last_typed',
   /** column name */
   Name = 'name',
   /** column name */
@@ -4115,12 +5180,19 @@ export type Users_Variance_Fields = {
   id?: Maybe<Scalars['Float']['output']>;
 };
 
+export type MessagesSubscriptionSubscriptionVariables = Exact<{
+  _eq?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type MessagesSubscriptionSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: number, text: string, timestamp: any, user_id: number }> };
+
 export type AddUserMutationVariables = Exact<{
   objects: Array<Users_Insert_Input> | Users_Insert_Input;
 }>;
 
 
-export type AddUserMutation = { __typename?: 'mutation_root', insert_users?: { __typename?: 'users_mutation_response', affected_rows: number } | null };
+export type AddUserMutation = { __typename?: 'mutation_root', insert_users?: { __typename?: 'users_mutation_response', affected_rows: number, returning: Array<{ __typename?: 'users', id: number }> } | null };
 
 export type GetUsersByPkQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -4132,30 +5204,93 @@ export type GetUsersByPkQuery = { __typename?: 'query_root', users_by_pk?: { __t
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', email: string, id: number, uid?: string | null, updated_at: any, created_at: any, last_seen: any }> };
+export type GetUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', email: string, id: number, uid: string, updated_at: any, created_at: any, last_seen: any }> };
+
+export type UpdateUserLastSeenMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
 
 
-export const AddUserDocument = `
+export type UpdateUserLastSeenMutation = { __typename?: 'mutation_root', update_users_by_pk?: { __typename?: 'users', id: number, last_seen: any } | null };
+
+export type GetUserQueryVariables = Exact<{
+  uid: String_Comparison_Exp;
+}>;
+
+
+export type GetUserQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: number }> };
+
+
+export const MessagesSubscriptionDocument = gql`
+    subscription messagesSubscription($_eq: Int = 10) {
+  messages(where: {user_id: {_eq: $_eq}}, order_by: {id: desc}, limit: 1) {
+    id
+    text
+    timestamp
+    user_id
+  }
+}
+    `;
+
+/**
+ * __useMessagesSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useMessagesSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMessagesSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessagesSubscriptionSubscription({
+ *   variables: {
+ *      _eq: // value for '_eq'
+ *   },
+ * });
+ */
+export function useMessagesSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MessagesSubscriptionSubscription, MessagesSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MessagesSubscriptionSubscription, MessagesSubscriptionSubscriptionVariables>(MessagesSubscriptionDocument, options);
+      }
+export type MessagesSubscriptionSubscriptionHookResult = ReturnType<typeof useMessagesSubscriptionSubscription>;
+export type MessagesSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MessagesSubscriptionSubscription>;
+export const AddUserDocument = gql`
     mutation addUser($objects: [users_insert_input!]!) {
   insert_users(objects: $objects) {
+    returning {
+      id
+    }
     affected_rows
   }
 }
     `;
-export const useAddUserMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<AddUserMutation, TError, AddUserMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) =>
-    useMutation<AddUserMutation, TError, AddUserMutationVariables, TContext>(
-      ['addUser'],
-      (variables?: AddUserMutationVariables) => fetcher<AddUserMutation, AddUserMutationVariables>(client, AddUserDocument, variables, headers)(),
-      options
-    );
-export const GetUsersByPkDocument = `
+export type AddUserMutationFn = Apollo.MutationFunction<AddUserMutation, AddUserMutationVariables>;
+
+/**
+ * __useAddUserMutation__
+ *
+ * To run a mutation, you first call `useAddUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserMutation, { data, loading, error }] = useAddUserMutation({
+ *   variables: {
+ *      objects: // value for 'objects'
+ *   },
+ * });
+ */
+export function useAddUserMutation(baseOptions?: Apollo.MutationHookOptions<AddUserMutation, AddUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddUserMutation, AddUserMutationVariables>(AddUserDocument, options);
+      }
+export type AddUserMutationHookResult = ReturnType<typeof useAddUserMutation>;
+export type AddUserMutationResult = Apollo.MutationResult<AddUserMutation>;
+export type AddUserMutationOptions = Apollo.BaseMutationOptions<AddUserMutation, AddUserMutationVariables>;
+export const GetUsersByPkDocument = gql`
     query getUsersByPk($id: Int!) {
   users_by_pk(id: $id) {
     email
@@ -4163,21 +5298,40 @@ export const GetUsersByPkDocument = `
   }
 }
     `;
-export const useGetUsersByPkQuery = <
-      TData = GetUsersByPkQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables: GetUsersByPkQueryVariables,
-      options?: UseQueryOptions<GetUsersByPkQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<GetUsersByPkQuery, TError, TData>(
-      ['getUsersByPk', variables],
-      fetcher<GetUsersByPkQuery, GetUsersByPkQueryVariables>(client, GetUsersByPkDocument, variables, headers),
-      options
-    );
-export const GetUsersDocument = `
+
+/**
+ * __useGetUsersByPkQuery__
+ *
+ * To run a query within a React component, call `useGetUsersByPkQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersByPkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersByPkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUsersByPkQuery(baseOptions: Apollo.QueryHookOptions<GetUsersByPkQuery, GetUsersByPkQueryVariables> & ({ variables: GetUsersByPkQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUsersByPkQuery, GetUsersByPkQueryVariables>(GetUsersByPkDocument, options);
+      }
+export function useGetUsersByPkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersByPkQuery, GetUsersByPkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUsersByPkQuery, GetUsersByPkQueryVariables>(GetUsersByPkDocument, options);
+        }
+export function useGetUsersByPkSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUsersByPkQuery, GetUsersByPkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUsersByPkQuery, GetUsersByPkQueryVariables>(GetUsersByPkDocument, options);
+        }
+export type GetUsersByPkQueryHookResult = ReturnType<typeof useGetUsersByPkQuery>;
+export type GetUsersByPkLazyQueryHookResult = ReturnType<typeof useGetUsersByPkLazyQuery>;
+export type GetUsersByPkSuspenseQueryHookResult = ReturnType<typeof useGetUsersByPkSuspenseQuery>;
+export type GetUsersByPkQueryResult = Apollo.QueryResult<GetUsersByPkQuery, GetUsersByPkQueryVariables>;
+export const GetUsersDocument = gql`
     query getUsers {
   users {
     email
@@ -4189,17 +5343,109 @@ export const GetUsersDocument = `
   }
 }
     `;
-export const useGetUsersQuery = <
-      TData = GetUsersQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables?: GetUsersQueryVariables,
-      options?: UseQueryOptions<GetUsersQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<GetUsersQuery, TError, TData>(
-      variables === undefined ? ['getUsers'] : ['getUsers', variables],
-      fetcher<GetUsersQuery, GetUsersQueryVariables>(client, GetUsersDocument, variables, headers),
-      options
-    );
+
+/**
+ * __useGetUsersQuery__
+ *
+ * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+      }
+export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        }
+export function useGetUsersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        }
+export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
+export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
+export type GetUsersSuspenseQueryHookResult = ReturnType<typeof useGetUsersSuspenseQuery>;
+export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const UpdateUserLastSeenDocument = gql`
+    mutation updateUserLastSeen($id: Int!) {
+  update_users_by_pk(pk_columns: {id: $id}, _set: {last_seen: "now()"}) {
+    id
+    last_seen
+  }
+}
+    `;
+export type UpdateUserLastSeenMutationFn = Apollo.MutationFunction<UpdateUserLastSeenMutation, UpdateUserLastSeenMutationVariables>;
+
+/**
+ * __useUpdateUserLastSeenMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserLastSeenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserLastSeenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserLastSeenMutation, { data, loading, error }] = useUpdateUserLastSeenMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateUserLastSeenMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserLastSeenMutation, UpdateUserLastSeenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserLastSeenMutation, UpdateUserLastSeenMutationVariables>(UpdateUserLastSeenDocument, options);
+      }
+export type UpdateUserLastSeenMutationHookResult = ReturnType<typeof useUpdateUserLastSeenMutation>;
+export type UpdateUserLastSeenMutationResult = Apollo.MutationResult<UpdateUserLastSeenMutation>;
+export type UpdateUserLastSeenMutationOptions = Apollo.BaseMutationOptions<UpdateUserLastSeenMutation, UpdateUserLastSeenMutationVariables>;
+export const GetUserDocument = gql`
+    query getUser($uid: String_comparison_exp!) {
+  users(where: {uid: $uid}) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables> & ({ variables: GetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export function useGetUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;

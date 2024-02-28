@@ -8,6 +8,7 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
+import { auth } from '../firebase-config';
 
 export const useCartStore = create<CartState>((set, get) => ({
   user_id: undefined,
@@ -31,7 +32,8 @@ export const useCartStore = create<CartState>((set, get) => ({
 }));
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
+  user: auth?.currentUser,
+  dbUser: null,
   auth: null,
   initialized: false,
   isLoggedIn: false,
@@ -53,12 +55,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         password as string,
       );
       set(() => ({ user, isLoggedIn: true }));
+
       return { isLoggedIn: get().isLoggedIn, user } satisfies {
         isLoggedIn: boolean;
         user: User;
       };
     } catch (error: any) {
-      console.log(error);
+      console.log('register handled error', { error });
       set(() => ({ registerError: error?.message }));
       throw new Error(error);
     }
@@ -87,6 +90,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await signOut(auth as Auth);
       set(() => ({
         user: null,
+        dbUser: null,
         isLoggedIn: false,
         generalError: undefined,
         loginError: undefined,

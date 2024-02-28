@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/accessible-emoji */
 import React, { useEffect, useRef } from 'react';
 import {
   SafeAreaView,
@@ -11,27 +10,53 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import tw from 'twrnc';
 import WelcomeWidget from '../../components/home/WelcomeWidget';
-import { useGetUsersQuery } from '../../graphql/generated';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import { useAuthStore } from '../../state/useStore';
-import { Auth } from 'firebase/auth';
+import { Auth, User } from 'firebase/auth';
 import { useRouter } from 'expo-router';
+import firebase from 'firebase/messaging';
+import {
+  useGetUsersQuery,
+  useGetUserQuery,
+} from '../../graphql/__generated__/graphql';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Home = () => {
   const scrollViewRef = useRef<null | ScrollView>(null);
   const router = useRouter();
 
-  const { appSignOut, auth } = useAuthStore((state) => state);
+  const { appSignOut, auth, user } = useAuthStore((state) => state);
 
-  const { data, isError, error, isLoading } = useGetUsersQuery(
-    useGraphQlClient(),
+  const { data: dbUserId } = useGetUserQuery({
+    client: useGraphQlClient(),
+    skip: !user,
+    variables: { uid: { _eq: user?.uid } },
+  });
+  const { data, error } = useGetUsersQuery({ client: useGraphQlClient() });
+
+  AsyncStorage.getAllKeys((err, keys: any) =>
+    AsyncStorage.multiGet(keys, (error, stores) => {
+      stores?.map((result, i, store) => {
+        console.log({ [store[i][0]]: JSON.parse(store[i][1] as string) });
+        return true;
+      });
+    }),
   );
 
   useEffect(() => {
-    if (isError) {
+    useAuthStore.setState(() => ({
+      dbUser: {
+        ...(user as User),
+        id: dbUserId?.users?.[0]?.id,
+      },
+    }));
+  }, [dbUserId?.users]);
+
+  useEffect(() => {
+    if (error) {
       useAuthStore.setState(() => ({ generalError: error }));
     }
-  }, [error, isError]);
+  }, [error]);
 
   const handleSignOut = async () => {
     const signOutResponse = await appSignOut(auth as Auth);
@@ -48,6 +73,7 @@ export const Home = () => {
         }}
         contentInsetAdjustmentBehavior="automatic"
         style={tw`bg-white`}
+        onStartShouldSetResponder={() => true}
       >
         <View style={tw` bg-slate-300 m-3 p-3 rounded-md bg-opacity-60`}>
           <TouchableOpacity
@@ -62,10 +88,8 @@ export const Home = () => {
         <View style={tw` bg-slate-300 m-3 p-3 rounded-md bg-opacity-60`}>
           <Text style={tw`text-black text-2xl font-medium`}>Hello there,</Text>
           <Text style={tw`font-bold p-10 text-5xl`} testID="heading">
-            Welcome Ui 👋
+            Welcome Ui{'👋'}
           </Text>
-
-          {/* Imported Component */}
           <WelcomeWidget />
         </View>
         <View style={tw` bg-slate-400 m-3 p-3 rounded-md bg-opacity-60`}>

@@ -2,6 +2,13 @@ table:
   name: users
   schema: public
 array_relationships:
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: messages
+          schema: public
   - name: owner
     using:
       foreign_key_constraint_on:
@@ -55,6 +62,7 @@ insert_permissions:
         - uid
         - created_at
         - last_seen
+        - last_typed
         - updated_at
 select_permissions:
   - role: user
@@ -66,6 +74,7 @@ select_permissions:
         - uid
         - created_at
         - last_seen
+        - last_typed
         - updated_at
       filter: {}
 update_permissions:
@@ -78,6 +87,7 @@ update_permissions:
         - uid
         - created_at
         - last_seen
+        - last_typed
         - updated_at
       filter: {}
       check: {}

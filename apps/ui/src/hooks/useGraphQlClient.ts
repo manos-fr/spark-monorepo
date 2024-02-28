@@ -1,34 +1,97 @@
 import {
-  GraphQLClient,
-  RequestDocument,
-  RequestOptions,
-} from 'graphql-request';
-import { useAuthStore } from '../state/useStore';
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  split,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { useAuthStore } from '../state/useStore'; // Import your token refresh function
 import { useMemo } from 'react';
+import * as Device from 'expo-device';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { UserType } from '@spark-monorepo/spark-shared';
+import { auth } from '../firebase-config';
 
-export class AuthorizedGraphQLClient extends GraphQLClient {
-  override async request<T>(...args: any[]): Promise<T> {
-    const { document, variables } = args[0] as RequestOptions;
-    return super.request(document as RequestDocument, variables);
-  }
-}
+const {
+  EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR,
+  EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE,
+} = process.env;
+
+const HASURA_URL = Device.isDevice
+  ? EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE
+  : EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR;
 
 export const useGraphQlClient = () => {
   const { user } = useAuthStore((state) => state);
-  const client = useMemo(() => {
-    console.log('useGraphQlClient');
-    const headers = {
-      Authorization: `Bearer ${(
-        user as any
-      )?.stsTokenManager?.accessToken?.toString()}`,
+  let token: UserType['stsTokenManager'] | null;
+
+  const authLink = setContext(async (_, { headers }) => {
+    token = (user as UserType)?.stsTokenManager;
+
+    await refreshTokenIfExpired(token);
+
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token.accessToken?.toString()}` : '',
+      },
     };
+  });
 
-    const client = new AuthorizedGraphQLClient(
-      process.env.EXPO_PUBLIC_HASURA_ENDPOINT as string,
-      { headers }
-    );
-    return client;
-  }, [user]);
+  const httpLink = createHttpLink({
+    uri: HASURA_URL,
+  });
 
+  const wsLink = new WebSocketLink({
+    uri: `wss://${HASURA_URL}/v1/graphql`,
+    options: {
+      reconnect: true,
+      connectionParams: async () => {
+        token = (user as UserType)?.stsTokenManager;
+
+        await refreshTokenIfExpired(token);
+
+        return {
+          headers: {
+            authorization: token
+              ? `Bearer ${token?.accessToken?.toString()}`
+              : '',
+          },
+        };
+      },
+    },
+  });
+
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    authLink.concat(httpLink),
+  );
+
+  const client = useMemo(
+    () =>
+      new ApolloClient({
+        link: splitLink,
+        cache: new InMemoryCache(),
+      }),
+    [user],
+  );
   return client;
+};
+
+const refreshTokenIfExpired = async (token: {
+  accessToken: string | undefined;
+  expirationTime: string;
+}) => {
+  if (+token?.expirationTime <= +new Date().getTime()?.toString()) {
+    token.accessToken = await auth.currentUser?.getIdToken(true);
+    console.log('Token refreshed');
+  }
 };

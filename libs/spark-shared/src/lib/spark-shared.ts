@@ -1,3 +1,5 @@
+import { User } from 'firebase/auth';
+
 export type Product =
   | {
       id?: number;
@@ -12,4 +14,8 @@ export type Product =
 export type Credentials = {
   email: string | undefined;
   password: string | undefined;
+};
+
+export type UserType = User & {
+  stsTokenManager: { accessToken: string | undefined; expirationTime: string };
 };

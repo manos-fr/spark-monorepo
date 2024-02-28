@@ -11,6 +11,7 @@ export type CartState = {
 
 export type AuthState = {
   user: User | null;
+  dbUser: (User & { id: number | undefined }) | null;
   auth: Auth | null;
   initialized: boolean;
   isLoggedIn: boolean;

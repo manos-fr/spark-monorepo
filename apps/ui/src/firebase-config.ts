@@ -1,5 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { browserLocalPersistence, initializeAuth } from 'firebase/auth';
+import { initializeAuth } from 'firebase/auth';
+import { getReactNativePersistence } from 'firebase/auth/react-native';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const {
   EXPO_PUBLIC_API_KEY,
@@ -23,5 +25,5 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = initializeAuth(app, {
-  persistence: browserLocalPersistence,
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });

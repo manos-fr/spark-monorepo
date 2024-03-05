@@ -21,9 +21,9 @@
       "bundleIdentifier": "com.company.calendar"
     },
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo/spark-splash-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#307A59"
     },
     "scheme": "ui",
     "assetBundlePatterns": ["**/*"],

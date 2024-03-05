@@ -29,7 +29,9 @@
     "@tanstack/react-query": "*",
     "graphql-request": "*",
     "expo-secure-store": "*",
-    "firebase": "*"
+    "firebase": "*",
+    "@expo/vector-icons": "*",
+    "expo-image": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp package-lock.json apps/ui",

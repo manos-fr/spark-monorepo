@@ -22,7 +22,7 @@ export default function Index() {
     ) {
       router.replace('/home');
     } else {
-      router.push('/sign-up');
+      router.push('/welcome');
     }
   }, [
     generalError?.response?.errors,

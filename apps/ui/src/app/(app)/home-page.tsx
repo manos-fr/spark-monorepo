@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import SupplierCard from '../../components/home/SupplierCard';
+import SupplierCard from '../../components/user/SupplierCard';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
 

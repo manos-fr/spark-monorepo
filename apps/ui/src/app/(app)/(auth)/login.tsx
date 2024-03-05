@@ -4,11 +4,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
+import TextInputLabel from '../../../components/user-input/TextInputLabel';
 
 export const Login = () => (
   <SafeAreaView style={tw`bg-white flex-1 mx-1`}>
@@ -24,14 +24,9 @@ export const Login = () => (
         </Text>
 
         <View>
-          <Text style={tw`font-semibold text-gray-600 mb-2`}>Email</Text>
-          <TextInput style={tw`bg-gray-100 py-3 rounded-lg mb-5`} />
+          <TextInputLabel label="Email" />
 
-          <Text style={tw`font-semibold text-gray-600 mb-2`}>Κωδικός</Text>
-          <TextInput
-            secureTextEntry
-            style={tw`bg-gray-100 py-2 rounded-lg mb-3`}
-          />
+          <TextInputLabel label="Κωδικός" secureTextEntry />
 
           <Link href="/forgot-password">
             <Text style={tw`font-semibold text-teal-700 mb-5`}>

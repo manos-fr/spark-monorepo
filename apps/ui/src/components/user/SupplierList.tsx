@@ -6,7 +6,7 @@ interface SupplyListProps {
   category: string;
 }
 
-const SupplierList: React.FC<SupplyListProps> = ({ category }) => (
+const SupplierList = ({ category }: SupplyListProps) => (
   <View>
     <SupplierItem category={category} />
   </View>

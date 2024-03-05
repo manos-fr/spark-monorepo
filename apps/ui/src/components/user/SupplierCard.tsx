@@ -9,11 +9,7 @@ interface SupplierCardProps {
   imageUrl: string;
 }
 
-const SupplierCard: React.FC<SupplierCardProps> = ({
-  name,
-  address,
-  imageUrl,
-}) => (
+const SupplierCard = ({ name, address, imageUrl }: SupplierCardProps) => (
   <View style={tw`mx-2 my-4`}>
     <Image source={imageUrl} style={tw`border rounded w-40 h-40`} />
     <View style={tw`flex items-start mt-2`}>

@@ -4,16 +4,16 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
-import { useAuthStore } from '../state/useStore';
+import { useAuthStore } from '../../../state/useStore';
 import { useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { useAddUserMutation } from '../graphql/generated';
-import { useGraphQlClient } from '../hooks/useGraphQlClient';
+import { useAddUserMutation } from '../../../graphql/generated';
+import { useGraphQlClient } from '../../../hooks/useGraphQlClient';
+import TextInputLabel from '../../../components/user-input/TextInputLabel';
 
 export const SignUp = () => {
   const { auth, appRegister } = useAuthStore((state) => state);
@@ -59,22 +59,23 @@ export const SignUp = () => {
           </Text>
 
           <View>
-            <Text style={tw`font-semibold text-gray-600 mb-2`}>
-              Επωνυμία Επιχείρησης
-            </Text>
-            <TextInput style={tw`bg-gray-100 py-3 rounded-lg mb-5`} />
+            <TextInputLabel label="Επωνυμία επιχείρησης" />
 
-            <Text style={tw`font-semibold text-gray-600 mb-2`}>Email</Text>
-            <TextInput
+            <TextInputLabel
+              label="Email"
               onChangeText={(text) => (emailRef.current = text)}
-              style={tw`bg-gray-100 py-3 rounded-lg mb-5`}
             />
 
-            <Text style={tw`font-semibold text-gray-600 mb-2`}>Κωδικός</Text>
-            <TextInput
+            <TextInputLabel
+              label="Κωδικός"
               onChangeText={(text) => (passwordRef.current = text)}
               secureTextEntry
-              style={tw`bg-gray-100 py-2 rounded-lg mb-3`}
+            />
+
+            <TextInputLabel
+              label="Επιβεβαίωση κωδικού"
+              onChangeText={(text) => (passwordRef.current = text)}
+              secureTextEntry
             />
 
             <Text style={tw`font-light text-xs mb-5`}>

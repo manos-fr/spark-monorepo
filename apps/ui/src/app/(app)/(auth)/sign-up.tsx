@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
   SafeAreaView,
   ScrollView,
@@ -11,8 +12,8 @@ import tw from 'twrnc';
 import { useAuthStore } from '../../../state/useStore';
 import { useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { useAddUserMutation } from '../../../graphql/generated';
 import { useGraphQlClient } from '../../../hooks/useGraphQlClient';
+import { useAddUserMutation } from 'apps/ui/src/graphql/__generated__/graphql';
 import TextInputLabel from '../../../components/user-input/TextInputLabel';
 
 export const SignUp = () => {
@@ -20,7 +21,9 @@ export const SignUp = () => {
   const router = useRouter();
   const emailRef = useRef('');
   const passwordRef = useRef('');
-  const { mutateAsync } = useAddUserMutation(useGraphQlClient());
+  const [addUserMutation, { loading, error }] = useAddUserMutation({
+    client: useGraphQlClient(),
+  });
 
   const handleRegister = async () => {
     const { user } = await appRegister(auth, {
@@ -37,11 +40,18 @@ export const SignUp = () => {
           },
         };
 
-        await mutateAsync(objects);
+        const { data: userId } = await addUserMutation({ variables: objects });
+
+        useAuthStore.setState(() => ({
+          dbUser: {
+            ...user,
+            id: userId?.insert_users?.returning?.[0].id || undefined,
+          },
+        }));
+        router.replace('/home-page');
       } catch (error) {
         console.log({ error });
       }
-      router.replace('/home');
     }
   };
 
@@ -64,6 +74,7 @@ export const SignUp = () => {
             <TextInputLabel
               label="Email"
               onChangeText={(text) => (emailRef.current = text)}
+              style={tw`bg-gray-100 py-4 rounded-xl shadow-lg mb-5`}
             />
 
             <TextInputLabel
@@ -83,6 +94,7 @@ export const SignUp = () => {
             </Text>
           </View>
 
+          {/* Create Account Button */}
           <TouchableOpacity
             style={tw`bg-teal-700 rounded-lg py-2 mt-8`}
             onPress={async () => await handleRegister()}
@@ -91,6 +103,26 @@ export const SignUp = () => {
               Εγγραφή
             </Text>
           </TouchableOpacity>
+
+          {/* Google Login */}
+          <View>
+            <Text style={tw`text-center text-gray-500 font-semibold my-5`}>
+              - Εγγραφή μέσω Google Account -
+            </Text>
+          </View>
+          <TouchableOpacity style={tw`mb-8`}>
+            {/* TODO: Google Logo should NOT be pressed across the whole block */}
+          </TouchableOpacity>
+
+          {/* Already have an account */}
+          <View>
+            <Link
+              href="/Login"
+              style={tw`text-center text-blue-500 font-semibold mb-10`}
+            >
+              Έχω ήδη λογαριασμό
+            </Link>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

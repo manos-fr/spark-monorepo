@@ -1,9 +1,16 @@
 // Create SupplierDetail.tsx in the supplier folder
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
 import SupplierList from '../../../components/user/SupplierList';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const supplyCategory = [
   'Λαχανικά',
@@ -22,36 +29,41 @@ const SupplierDetail: React.FC = () => {
   );
 
   return (
-    <View style={tw`items-center`}>
-      <Text style={tw`text-2xl font-bold`}>Supplier Detail Page</Text>
-      <Text style={tw`text-lg`}>Supplier ID:</Text>
-      <View style={tw`flex flex-row mt-5`}>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={supplyCategory}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[
-                tw`p-2 mx-2 `,
-                activeSupplyCategory === item && tw` bg-teal-700 rounded-lg`,
-              ]}
-              onPress={() => setActiveSupplyCategory(item)}
-            >
-              <Text
-                style={[
-                  tw`text-lg`,
-                  activeSupplyCategory === item && tw` text-white`,
-                ]}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-      <SupplierList category={activeSupplyCategory} />
-    </View>
+    <SafeAreaView>
+      <ScrollView>
+        <View style={tw`items-center`}>
+          <Text style={tw`text-2xl font-bold`}>Supplier Detail Page</Text>
+          <Text style={tw`text-lg`}>Supplier ID:</Text>
+          <View style={tw`flex flex-row mt-5`}>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={supplyCategory}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    tw`p-2 mx-2 `,
+                    activeSupplyCategory === item &&
+                      tw` bg-teal-700 rounded-lg`,
+                  ]}
+                  onPress={() => setActiveSupplyCategory(item)}
+                >
+                  <Text
+                    style={[
+                      tw`text-lg`,
+                      activeSupplyCategory === item && tw` text-white`,
+                    ]}
+                  >
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          <SupplierList category={activeSupplyCategory} />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 export default SupplierDetail;

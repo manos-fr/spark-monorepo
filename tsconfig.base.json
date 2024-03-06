@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@spark-monorepo/spark-shared": ["libs/spark-shared/src/index.ts"]
+      "@spark-monorepo/spark-shared": ["libs/spark-shared/src/index.js"]
     },
     "strict": false
   },

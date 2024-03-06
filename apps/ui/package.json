@@ -28,10 +28,16 @@
     "zustand": "*",
     "@tanstack/react-query": "*",
     "graphql-request": "*",
-    "expo-secure-store": "*",
-    "firebase": "*",
     "@expo/vector-icons": "*",
-    "expo-image": "*"
+    "expo-image": "*",
+    "firebase": "*",
+    "lodash.debounce": "*",
+    "expo-device": "*",
+    "@apollo/client": "*",
+    "@graphql-codegen/cli": "*",
+    "@graphql-typed-document-node/core": "*",
+    "graphql": "*",
+    "@react-native-async-storage/async-storage": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp package-lock.json apps/ui",

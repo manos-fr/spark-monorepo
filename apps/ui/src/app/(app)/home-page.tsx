@@ -1,13 +1,8 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import SupplierCard from '../../components/user/SupplierCard';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
+import { useRef } from 'react';
 
 const dummySuppliers = [
   {
@@ -43,11 +38,19 @@ const dummySuppliers = [
 ];
 
 const HomePage = () => {
+  const scrollViewRef = useRef<null | ScrollView>(null);
   const router = useRouter();
 
   return (
-    <SafeAreaView style={tw`flex-1 mx-5 mb-20`}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      ref={(ref) => {
+        scrollViewRef.current = ref;
+      }}
+      contentInsetAdjustmentBehavior="automatic"
+      onStartShouldSetResponder={() => true}
+    >
+      <View style={tw`flex-1 mx-5`}>
         <Text style={tw`text-2xl font-bold my-3`}>Οι προμηθευτές μου</Text>
         <View style={tw`flex flex-row flex-wrap justify-between`}>
           {dummySuppliers.map((item) => (
@@ -63,8 +66,8 @@ const HomePage = () => {
             </TouchableOpacity>
           ))}
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 };
 

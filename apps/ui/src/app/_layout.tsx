@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { auth } from '../firebase-config';
 import { Auth, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'expo-router';
-import SignUp from './sign-up';
+import SignUp from '../../src/app/(app)/(auth)/sign-up';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,8 +35,7 @@ export default function Root() {
             isLoggedIn: user ? true : false,
             initialized: true,
           }));
-
-          router.replace('/home');
+          router.replace('/home-page');
         } else {
           return <SignUp />;
         }

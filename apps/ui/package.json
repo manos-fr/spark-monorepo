@@ -28,7 +28,6 @@
     "zustand": "*",
     "@tanstack/react-query": "*",
     "graphql-request": "*",
-    "expo-secure-store": "*",
     "@expo/vector-icons": "*",
     "expo-image": "*",
     "firebase": "*",

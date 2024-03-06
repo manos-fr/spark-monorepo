@@ -19,7 +19,7 @@ export default function Index() {
         'Could not verify JWT: JWSError',
       )
     ) {
-      router.replace('/home');
+      router.replace('/home-page');
     } else {
       router.push('/welcome');
     }
@@ -36,7 +36,7 @@ export default function Index() {
       {!navigationState?.key ? (
         <Text>{'LOADING...'}</Text>
       ) : (
-        <Redirect href={'/home'}></Redirect>
+        <Redirect href={'/home-page'}></Redirect>
       )}
     </View>
   );

@@ -21,7 +21,7 @@ const ErrorComponent = () => {
   }, [error]);
 
   return (
-    <View style={tw` bg-black`}>
+    <View style={tw`bg-black`}>
       <View style={tw`bg-red-400 p-4 rounded-xl absolute top-40`}>
         <Text style={tw`text-gray-200 font-semibold text-lg`}>
           {error?.toString() || 'An error occurred'}

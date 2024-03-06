@@ -16,11 +16,14 @@ import { auth } from '../firebase-config';
 const {
   EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR,
   EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE,
+  EXPO_PUBLIC_HASURA_ENDPOINT_PROD,
 } = process.env;
 
-const HASURA_URL = Device.isDevice
-  ? EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE
-  : EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR;
+// const HASURA_URL = Device.isDevice
+//   ? EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE
+//   : EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR;
+
+const HASURA_URL = EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
 
 export const useGraphQlClient = () => {
   const { user } = useAuthStore((state) => state);

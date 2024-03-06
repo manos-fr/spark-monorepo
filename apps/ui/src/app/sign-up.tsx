@@ -48,6 +48,7 @@ export const SignUp = () => {
         }));
         router.replace('/home');
       } catch (error) {
+        router.replace('/sign-up');
         console.log({ error });
       }
     }

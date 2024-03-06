@@ -3,8 +3,11 @@ import { CodegenConfig } from '@graphql-codegen/cli';
 const config: CodegenConfig = {
   overwrite: true,
   schema: {
-    'http://localhost:8083/v1/graphql': {
-      headers: { 'x-hasura-admin-secret': 'jijikos' },
+    'https://alert-bullfrog-61.hasura.app/v1/graphql': {
+      headers: {
+        'x-hasura-admin-secret':
+          'aoLIuaU1zZ2Puz3hx5QhZtnaiDzNaRSse6bcn8qkfsAARijonogBCE7GdnWSKyhf',
+      },
     },
   },
   documents: ['./src/**/gql-model.ts', './src/graphql/models'],

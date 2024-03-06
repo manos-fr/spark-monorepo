@@ -4,9 +4,9 @@
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {
-        "url": "http://localhost:8083/v1/graphql",
+        "url": "https://alert-bullfrog-61.hasura.app/v1/graphql",
         "headers": {
-          "x-hasura-admin-secret": "jijikos"
+          "x-hasura-admin-secret": "aoLIuaU1zZ2Puz3hx5QhZtnaiDzNaRSse6bcn8qkfsAARijonogBCE7GdnWSKyhf"
         },
         "introspect": true
       }

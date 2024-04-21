@@ -1,12 +1,6 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import tw from 'twrnc';
 
 const blurhash =
@@ -17,11 +11,10 @@ export const Welcome = () => (
     <ScrollView>
       <View style={tw`px-4 mt-18`}>
         <Text style={tw`font-extrabold text-black text-xl text-left mb-3 mt-8`}>
-          Είσαι προμηθευτής; Σε έχουμε!
+          Είσαι προμηθευτής; Σε έχουμε! Εστιατόριο; Κι εσένα σε έχουμε!
         </Text>
         <Text style={tw`font-light text-black text-left mb-10`}>
-          Μπες στη νέα εποχή και κάνε τις παραγγελίες σου στον μισό χρόνο με
-          τρέλα κι όρεξη για ζωή
+          Μπες στη νέα εποχή και κάνε τις παραγγελίες σου πιο γρήγορα από ποτέ
         </Text>
 
         {/* Doesn't work - Need to figure out images */}
@@ -32,21 +25,23 @@ export const Welcome = () => (
           contentFit="cover"
         />
 
-        <Link href="/login" asChild>
-          <TouchableOpacity style={tw`bg-teal-700 rounded-lg py-2 mt-8`}>
-            <Text style={tw`text-center font-semibold text-white text-lg`}>
-              Σύνδεση
-            </Text>
-          </TouchableOpacity>
-        </Link>
+        <Pressable
+          onPress={() => router.push('/login')}
+          style={tw`bg-teal-700 rounded-lg py-2 mt-8`}
+        >
+          <Text style={tw`text-center font-semibold text-white text-lg`}>
+            Σύνδεση
+          </Text>
+        </Pressable>
 
-        <Link href="/sign-up" asChild>
-          <TouchableOpacity style={tw`bg-gray-200 rounded-lg py-2 mt-4`}>
-            <Text style={tw`text-center font-semibold text-teal-700 text-lg`}>
-              Εγγραφή
-            </Text>
-          </TouchableOpacity>
-        </Link>
+        <Pressable
+          onPress={() => router.push('sign-up')}
+          style={tw`bg-gray-200 rounded-lg py-2 mt-4`}
+        >
+          <Text style={tw`text-center font-semibold text-teal-700 text-lg`}>
+            Εγγραφή
+          </Text>
+        </Pressable>
       </View>
     </ScrollView>
   </SafeAreaView>

@@ -1,12 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
-import { Link } from 'expo-router';
+import { SafeAreaView, ScrollView, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useAuthStore } from '../../../state/useStore';
@@ -59,10 +52,10 @@ export const SignUp = () => {
   return (
     <SafeAreaView style={tw`bg-white flex-1 mx-1`}>
       <ScrollView>
-        <View style={tw`px-4 mt-18`}>
-          <Link href="/welcome">
+        <View style={tw`px-4 mt-8`}>
+          <Pressable onPress={() => router.back()}>
             <Ionicons name="chevron-back-outline" size={26} color="black" />
-          </Link>
+          </Pressable>
           <Text
             style={tw`font-extrabold text-black text-2xl text-left mt-8 mb-10`}
           >
@@ -70,12 +63,12 @@ export const SignUp = () => {
           </Text>
 
           <View>
-            <TextInputLabel label="Επωνυμία επιχείρησης" />
+            <TextInputLabel label="Ονομασία Επιχείρησης" />
 
             <TextInputLabel
               label="Email"
               onChangeText={(text) => (emailRef.current = text)}
-              style={tw`bg-gray-100 py-4 rounded-xl shadow-lg mb-5`}
+              autoCapitalize="none"
             />
 
             <TextInputLabel
@@ -95,35 +88,28 @@ export const SignUp = () => {
             </Text>
           </View>
 
-          {/* Create Account Button */}
-          <TouchableOpacity
+          <Pressable
             style={tw`bg-teal-700 rounded-lg py-2 mt-8`}
             onPress={async () => await handleRegister()}
           >
             <Text style={tw`text-center font-semibold text-white text-lg`}>
               Εγγραφή
             </Text>
-          </TouchableOpacity>
+          </Pressable>
 
-          {/* Google Login */}
-          <View>
-            <Text style={tw`text-center text-gray-500 font-semibold my-5`}>
-              - Εγγραφή μέσω Google Account -
-            </Text>
-          </View>
-          <TouchableOpacity style={tw`mb-8`}>
+          <Text style={tw`text-center text-gray-500 font-semibold my-5`}>
+            - Εγγραφή μέσω Google Account -
+          </Text>
+
+          <Pressable style={tw`mb-8`}>
             {/* TODO: Google Logo should NOT be pressed across the whole block */}
-          </TouchableOpacity>
+          </Pressable>
 
-          {/* Already have an account */}
-          <View>
-            <Link
-              href="/Login"
-              style={tw`text-center text-blue-500 font-semibold mb-10`}
-            >
+          <Pressable onPress={() => router.push('/login')}>
+            <Text style={tw`text-center text-blue-500 font-semibold mb-10`}>
               Έχω ήδη λογαριασμό
-            </Link>
-          </View>
+            </Text>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>

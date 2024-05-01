@@ -4,6 +4,9 @@ import tw from 'twrnc';
 import { useRouter } from 'expo-router';
 import { useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { useMessagesSubscriptionSubscription } from '../../graphql/__generated__/graphql';
+import { useGraphQlClient } from '../../hooks/useGraphQlClient';
+import { useAuthStore } from '../../state/useStore';
 
 const dummySuppliers = [
   {
@@ -41,6 +44,14 @@ const dummySuppliers = [
 const HomePage = () => {
   const scrollViewRef = useRef<null | ScrollView>(null);
   const router = useRouter();
+  const { dbUser, user } = useAuthStore((state) => state);
+
+  const { data } = useMessagesSubscriptionSubscription({
+    client: useGraphQlClient(),
+    variables: {},
+  });
+
+  console.log(data?.messages[0].text);
 
   return (
     <>

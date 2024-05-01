@@ -1118,36 +1118,16 @@ export type Orders = {
   created_at: Scalars['timestamptz']['output'];
   id: Scalars['Int']['output'];
   /** An array relationship */
-  order: Array<User_Orders>;
-  /** An aggregate relationship */
-  order_aggregate: User_Orders_Aggregate;
-  /** An array relationship */
   orders_products: Array<Orders_Products>;
   /** An aggregate relationship */
   orders_products_aggregate: Orders_Products_Aggregate;
   products: Scalars['jsonb']['output'];
   status: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
-};
-
-
-/** columns and relationships of "orders" */
-export type OrdersOrderArgs = {
-  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
-  where?: InputMaybe<User_Orders_Bool_Exp>;
-};
-
-
-/** columns and relationships of "orders" */
-export type OrdersOrder_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
-  where?: InputMaybe<User_Orders_Bool_Exp>;
+  /** An array relationship */
+  user_orders: Array<User_Orders>;
+  /** An aggregate relationship */
+  user_orders_aggregate: User_Orders_Aggregate;
 };
 
 
@@ -1174,6 +1154,26 @@ export type OrdersOrders_Products_AggregateArgs = {
 /** columns and relationships of "orders" */
 export type OrdersProductsArgs = {
   path?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** columns and relationships of "orders" */
+export type OrdersUser_OrdersArgs = {
+  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
+  where?: InputMaybe<User_Orders_Bool_Exp>;
+};
+
+
+/** columns and relationships of "orders" */
+export type OrdersUser_Orders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
+  where?: InputMaybe<User_Orders_Bool_Exp>;
 };
 
 /** aggregated selection of "orders" */
@@ -1224,13 +1224,13 @@ export type Orders_Bool_Exp = {
   _or?: InputMaybe<Array<Orders_Bool_Exp>>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
-  order?: InputMaybe<User_Orders_Bool_Exp>;
-  order_aggregate?: InputMaybe<User_Orders_Aggregate_Bool_Exp>;
   orders_products?: InputMaybe<Orders_Products_Bool_Exp>;
   orders_products_aggregate?: InputMaybe<Orders_Products_Aggregate_Bool_Exp>;
   products?: InputMaybe<Jsonb_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user_orders?: InputMaybe<User_Orders_Bool_Exp>;
+  user_orders_aggregate?: InputMaybe<User_Orders_Aggregate_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "orders" */
@@ -1263,11 +1263,11 @@ export type Orders_Inc_Input = {
 export type Orders_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<User_Orders_Arr_Rel_Insert_Input>;
   orders_products?: InputMaybe<Orders_Products_Arr_Rel_Insert_Input>;
   products?: InputMaybe<Scalars['jsonb']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  user_orders?: InputMaybe<User_Orders_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -1315,11 +1315,11 @@ export type Orders_On_Conflict = {
 export type Orders_Order_By = {
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  order_aggregate?: InputMaybe<User_Orders_Aggregate_Order_By>;
   orders_products_aggregate?: InputMaybe<Orders_Products_Aggregate_Order_By>;
   products?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user_orders_aggregate?: InputMaybe<User_Orders_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: orders */
@@ -1340,9 +1340,9 @@ export type Orders_Products = {
   /** An object relationship */
   order: Orders;
   order_id: Scalars['Int']['output'];
-  product_id: Scalars['Int']['output'];
   /** An object relationship */
-  products: Products;
+  product: Products;
+  product_id: Scalars['Int']['output'];
   updated_at: Scalars['timestamptz']['output'];
 };
 
@@ -1433,8 +1433,8 @@ export type Orders_Products_Bool_Exp = {
   id?: InputMaybe<Int_Comparison_Exp>;
   order?: InputMaybe<Orders_Bool_Exp>;
   order_id?: InputMaybe<Int_Comparison_Exp>;
+  product?: InputMaybe<Products_Bool_Exp>;
   product_id?: InputMaybe<Int_Comparison_Exp>;
-  products?: InputMaybe<Products_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -1457,8 +1457,8 @@ export type Orders_Products_Insert_Input = {
   id?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<Orders_Obj_Rel_Insert_Input>;
   order_id?: InputMaybe<Scalars['Int']['input']>;
+  product?: InputMaybe<Products_Obj_Rel_Insert_Input>;
   product_id?: InputMaybe<Scalars['Int']['input']>;
-  products?: InputMaybe<Products_Obj_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1522,8 +1522,8 @@ export type Orders_Products_Order_By = {
   id?: InputMaybe<Order_By>;
   order?: InputMaybe<Orders_Order_By>;
   order_id?: InputMaybe<Order_By>;
+  product?: InputMaybe<Products_Order_By>;
   product_id?: InputMaybe<Order_By>;
-  products?: InputMaybe<Products_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -1828,9 +1828,9 @@ export type Products = {
   orders_products: Array<Orders_Products>;
   /** An aggregate relationship */
   orders_products_aggregate: Orders_Products_Aggregate;
-  /** An object relationship */
-  supplier: Users;
   supplier_id: Scalars['Int']['output'];
+  /** An object relationship */
+  user: Users;
 };
 
 
@@ -1940,8 +1940,8 @@ export type Products_Bool_Exp = {
   name?: InputMaybe<String_Comparison_Exp>;
   orders_products?: InputMaybe<Orders_Products_Bool_Exp>;
   orders_products_aggregate?: InputMaybe<Orders_Products_Aggregate_Bool_Exp>;
-  supplier?: InputMaybe<Users_Bool_Exp>;
   supplier_id?: InputMaybe<Int_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "products" */
@@ -1963,8 +1963,8 @@ export type Products_Insert_Input = {
   id?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   orders_products?: InputMaybe<Orders_Products_Arr_Rel_Insert_Input>;
-  supplier?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   supplier_id?: InputMaybe<Scalars['Int']['input']>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -2035,8 +2035,8 @@ export type Products_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   orders_products_aggregate?: InputMaybe<Orders_Products_Aggregate_Order_By>;
-  supplier?: InputMaybe<Users_Order_By>;
   supplier_id?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
 };
 
 /** primary key columns input for table: products */
@@ -2234,21 +2234,21 @@ export type Query_Root = {
   user_online: Array<User_Online>;
   /** fetch aggregated fields from the table: "user_online" */
   user_online_aggregate: User_Online_Aggregate;
-  /** fetch data from the table: "user_orders" */
+  /** An array relationship */
   user_orders: Array<User_Orders>;
-  /** fetch aggregated fields from the table: "user_orders" */
+  /** An aggregate relationship */
   user_orders_aggregate: User_Orders_Aggregate;
   /** fetch data from the table: "user_orders" using primary key columns */
   user_orders_by_pk?: Maybe<User_Orders>;
-  /** fetch data from the table: "user_relationships" */
+  /** An array relationship */
   user_relationships: Array<User_Relationships>;
-  /** fetch aggregated fields from the table: "user_relationships" */
+  /** An aggregate relationship */
   user_relationships_aggregate: User_Relationships_Aggregate;
   /** fetch data from the table: "user_relationships" using primary key columns */
   user_relationships_by_pk?: Maybe<User_Relationships>;
-  /** fetch data from the table: "user_roles" */
+  /** An array relationship */
   user_roles: Array<User_Roles>;
-  /** fetch aggregated fields from the table: "user_roles" */
+  /** An aggregate relationship */
   user_roles_aggregate: User_Roles_Aggregate;
   /** fetch data from the table: "user_roles" using primary key columns */
   user_roles_by_pk?: Maybe<User_Roles>;
@@ -2522,14 +2522,14 @@ export type Roles = {
   key: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
   /** An array relationship */
-  user_role: Array<User_Roles>;
+  user_roles: Array<User_Roles>;
   /** An aggregate relationship */
-  user_role_aggregate: User_Roles_Aggregate;
+  user_roles_aggregate: User_Roles_Aggregate;
 };
 
 
 /** columns and relationships of "roles" */
-export type RolesUser_RoleArgs = {
+export type RolesUser_RolesArgs = {
   distinct_on?: InputMaybe<Array<User_Roles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2539,7 +2539,7 @@ export type RolesUser_RoleArgs = {
 
 
 /** columns and relationships of "roles" */
-export type RolesUser_Role_AggregateArgs = {
+export type RolesUser_Roles_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Roles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2593,8 +2593,8 @@ export type Roles_Bool_Exp = {
   id?: InputMaybe<Int_Comparison_Exp>;
   key?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user_role?: InputMaybe<User_Roles_Bool_Exp>;
-  user_role_aggregate?: InputMaybe<User_Roles_Aggregate_Bool_Exp>;
+  user_roles?: InputMaybe<User_Roles_Bool_Exp>;
+  user_roles_aggregate?: InputMaybe<User_Roles_Aggregate_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "roles" */
@@ -2615,7 +2615,7 @@ export type Roles_Insert_Input = {
   id?: InputMaybe<Scalars['Int']['input']>;
   key?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  user_role?: InputMaybe<User_Roles_Arr_Rel_Insert_Input>;
+  user_roles?: InputMaybe<User_Roles_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -2668,7 +2668,7 @@ export type Roles_Order_By = {
   id?: InputMaybe<Order_By>;
   key?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
-  user_role_aggregate?: InputMaybe<User_Roles_Aggregate_Order_By>;
+  user_roles_aggregate?: InputMaybe<User_Roles_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: roles */
@@ -2829,25 +2829,25 @@ export type Subscription_Root = {
   user_online_aggregate: User_Online_Aggregate;
   /** fetch data from the table in a streaming manner: "user_online" */
   user_online_stream: Array<User_Online>;
-  /** fetch data from the table: "user_orders" */
+  /** An array relationship */
   user_orders: Array<User_Orders>;
-  /** fetch aggregated fields from the table: "user_orders" */
+  /** An aggregate relationship */
   user_orders_aggregate: User_Orders_Aggregate;
   /** fetch data from the table: "user_orders" using primary key columns */
   user_orders_by_pk?: Maybe<User_Orders>;
   /** fetch data from the table in a streaming manner: "user_orders" */
   user_orders_stream: Array<User_Orders>;
-  /** fetch data from the table: "user_relationships" */
+  /** An array relationship */
   user_relationships: Array<User_Relationships>;
-  /** fetch aggregated fields from the table: "user_relationships" */
+  /** An aggregate relationship */
   user_relationships_aggregate: User_Relationships_Aggregate;
   /** fetch data from the table: "user_relationships" using primary key columns */
   user_relationships_by_pk?: Maybe<User_Relationships>;
   /** fetch data from the table in a streaming manner: "user_relationships" */
   user_relationships_stream: Array<User_Relationships>;
-  /** fetch data from the table: "user_roles" */
+  /** An array relationship */
   user_roles: Array<User_Roles>;
-  /** fetch aggregated fields from the table: "user_roles" */
+  /** An aggregate relationship */
   user_roles_aggregate: User_Roles_Aggregate;
   /** fetch data from the table: "user_roles" using primary key columns */
   user_roles_by_pk?: Maybe<User_Roles>;
@@ -3409,9 +3409,9 @@ export type User_Orders = {
   order_id: Scalars['Int']['output'];
   updated_at: Scalars['timestamptz']['output'];
   /** An object relationship */
-  user_1: Users;
+  user: Users;
   /** An object relationship */
-  user_2: Users;
+  userByUserId2: Users;
   user_id_1: Scalars['Int']['output'];
   user_id_2: Scalars['Int']['output'];
 };
@@ -3506,8 +3506,8 @@ export type User_Orders_Bool_Exp = {
   order?: InputMaybe<Orders_Bool_Exp>;
   order_id?: InputMaybe<Int_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user_1?: InputMaybe<Users_Bool_Exp>;
-  user_2?: InputMaybe<Users_Bool_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  userByUserId2?: InputMaybe<Users_Bool_Exp>;
   user_id_1?: InputMaybe<Int_Comparison_Exp>;
   user_id_2?: InputMaybe<Int_Comparison_Exp>;
 };
@@ -3533,8 +3533,8 @@ export type User_Orders_Insert_Input = {
   order?: InputMaybe<Orders_Obj_Rel_Insert_Input>;
   order_id?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  user_1?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  user_2?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  userByUserId2?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id_1?: InputMaybe<Scalars['Int']['input']>;
   user_id_2?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -3604,8 +3604,8 @@ export type User_Orders_Order_By = {
   order?: InputMaybe<Orders_Order_By>;
   order_id?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
-  user_1?: InputMaybe<Users_Order_By>;
-  user_2?: InputMaybe<Users_Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  userByUserId2?: InputMaybe<Users_Order_By>;
   user_id_1?: InputMaybe<Order_By>;
   user_id_2?: InputMaybe<Order_By>;
 };
@@ -3807,12 +3807,12 @@ export type User_Orders_Variance_Order_By = {
 export type User_Relationships = {
   __typename?: 'user_relationships';
   id: Scalars['Int']['output'];
-  /** An object relationship */
-  owner: Users;
   owner_id: Scalars['Int']['output'];
-  /** An object relationship */
-  supplier: Users;
   supplier_id: Scalars['Int']['output'];
+  /** An object relationship */
+  user: Users;
+  /** An object relationship */
+  userBySupplierId: Users;
 };
 
 /** aggregated selection of "user_relationships" */
@@ -3899,10 +3899,10 @@ export type User_Relationships_Bool_Exp = {
   _not?: InputMaybe<User_Relationships_Bool_Exp>;
   _or?: InputMaybe<Array<User_Relationships_Bool_Exp>>;
   id?: InputMaybe<Int_Comparison_Exp>;
-  owner?: InputMaybe<Users_Bool_Exp>;
   owner_id?: InputMaybe<Int_Comparison_Exp>;
-  supplier?: InputMaybe<Users_Bool_Exp>;
   supplier_id?: InputMaybe<Int_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  userBySupplierId?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "user_relationships" */
@@ -3921,10 +3921,10 @@ export type User_Relationships_Inc_Input = {
 /** input type for inserting data into table "user_relationships" */
 export type User_Relationships_Insert_Input = {
   id?: InputMaybe<Scalars['Int']['input']>;
-  owner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   owner_id?: InputMaybe<Scalars['Int']['input']>;
-  supplier?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   supplier_id?: InputMaybe<Scalars['Int']['input']>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  userBySupplierId?: InputMaybe<Users_Obj_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -3976,10 +3976,10 @@ export type User_Relationships_On_Conflict = {
 /** Ordering options when selecting data from "user_relationships". */
 export type User_Relationships_Order_By = {
   id?: InputMaybe<Order_By>;
-  owner?: InputMaybe<Users_Order_By>;
   owner_id?: InputMaybe<Order_By>;
-  supplier?: InputMaybe<Users_Order_By>;
   supplier_id?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  userBySupplierId?: InputMaybe<Users_Order_By>;
 };
 
 /** primary key columns input for table: user_relationships */
@@ -4720,31 +4720,32 @@ export type Users = {
   messages_aggregate: Messages_Aggregate;
   name?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
-  owner: Array<User_Relationships>;
-  /** An aggregate relationship */
-  owner_aggregate: User_Relationships_Aggregate;
-  /** An array relationship */
   products: Array<Products>;
   /** An aggregate relationship */
   products_aggregate: Products_Aggregate;
-  /** An array relationship */
-  supplier: Array<User_Relationships>;
-  /** An aggregate relationship */
-  supplier_aggregate: User_Relationships_Aggregate;
+  profile_image?: Maybe<Scalars['String']['output']>;
   uid: Scalars['String']['output'];
   updated_at: Scalars['timestamptz']['output'];
   /** An array relationship */
-  user_1: Array<User_Orders>;
+  userOrdersByUserId2: Array<User_Orders>;
   /** An aggregate relationship */
-  user_1_aggregate: User_Orders_Aggregate;
+  userOrdersByUserId2_aggregate: User_Orders_Aggregate;
   /** An array relationship */
-  user_2: Array<User_Orders>;
+  userRelationshipsBySupplierId: Array<User_Relationships>;
   /** An aggregate relationship */
-  user_2_aggregate: User_Orders_Aggregate;
+  userRelationshipsBySupplierId_aggregate: User_Relationships_Aggregate;
   /** An array relationship */
-  user_role: Array<User_Roles>;
+  user_orders: Array<User_Orders>;
   /** An aggregate relationship */
-  user_role_aggregate: User_Roles_Aggregate;
+  user_orders_aggregate: User_Orders_Aggregate;
+  /** An array relationship */
+  user_relationships: Array<User_Relationships>;
+  /** An aggregate relationship */
+  user_relationships_aggregate: User_Relationships_Aggregate;
+  /** An array relationship */
+  user_roles: Array<User_Roles>;
+  /** An aggregate relationship */
+  user_roles_aggregate: User_Roles_Aggregate;
 };
 
 
@@ -4769,26 +4770,6 @@ export type UsersMessages_AggregateArgs = {
 
 
 /** columns and relationships of "users" */
-export type UsersOwnerArgs = {
-  distinct_on?: InputMaybe<Array<User_Relationships_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Relationships_Order_By>>;
-  where?: InputMaybe<User_Relationships_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersOwner_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<User_Relationships_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Relationships_Order_By>>;
-  where?: InputMaybe<User_Relationships_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
 export type UsersProductsArgs = {
   distinct_on?: InputMaybe<Array<Products_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -4809,7 +4790,27 @@ export type UsersProducts_AggregateArgs = {
 
 
 /** columns and relationships of "users" */
-export type UsersSupplierArgs = {
+export type UsersUserOrdersByUserId2Args = {
+  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
+  where?: InputMaybe<User_Orders_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersUserOrdersByUserId2_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
+  where?: InputMaybe<User_Orders_Bool_Exp>;
+};
+
+
+/** columns and relationships of "users" */
+export type UsersUserRelationshipsBySupplierIdArgs = {
   distinct_on?: InputMaybe<Array<User_Relationships_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4819,7 +4820,7 @@ export type UsersSupplierArgs = {
 
 
 /** columns and relationships of "users" */
-export type UsersSupplier_AggregateArgs = {
+export type UsersUserRelationshipsBySupplierId_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Relationships_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4829,7 +4830,7 @@ export type UsersSupplier_AggregateArgs = {
 
 
 /** columns and relationships of "users" */
-export type UsersUser_1Args = {
+export type UsersUser_OrdersArgs = {
   distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4839,7 +4840,7 @@ export type UsersUser_1Args = {
 
 
 /** columns and relationships of "users" */
-export type UsersUser_1_AggregateArgs = {
+export type UsersUser_Orders_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4849,27 +4850,27 @@ export type UsersUser_1_AggregateArgs = {
 
 
 /** columns and relationships of "users" */
-export type UsersUser_2Args = {
-  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
+export type UsersUser_RelationshipsArgs = {
+  distinct_on?: InputMaybe<Array<User_Relationships_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
-  where?: InputMaybe<User_Orders_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Relationships_Order_By>>;
+  where?: InputMaybe<User_Relationships_Bool_Exp>;
 };
 
 
 /** columns and relationships of "users" */
-export type UsersUser_2_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<User_Orders_Select_Column>>;
+export type UsersUser_Relationships_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<User_Relationships_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<User_Orders_Order_By>>;
-  where?: InputMaybe<User_Orders_Bool_Exp>;
+  order_by?: InputMaybe<Array<User_Relationships_Order_By>>;
+  where?: InputMaybe<User_Relationships_Bool_Exp>;
 };
 
 
 /** columns and relationships of "users" */
-export type UsersUser_RoleArgs = {
+export type UsersUser_RolesArgs = {
   distinct_on?: InputMaybe<Array<User_Roles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4879,7 +4880,7 @@ export type UsersUser_RoleArgs = {
 
 
 /** columns and relationships of "users" */
-export type UsersUser_Role_AggregateArgs = {
+export type UsersUser_Roles_AggregateArgs = {
   distinct_on?: InputMaybe<Array<User_Roles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4936,20 +4937,21 @@ export type Users_Bool_Exp = {
   messages?: InputMaybe<Messages_Bool_Exp>;
   messages_aggregate?: InputMaybe<Messages_Aggregate_Bool_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
-  owner?: InputMaybe<User_Relationships_Bool_Exp>;
-  owner_aggregate?: InputMaybe<User_Relationships_Aggregate_Bool_Exp>;
   products?: InputMaybe<Products_Bool_Exp>;
   products_aggregate?: InputMaybe<Products_Aggregate_Bool_Exp>;
-  supplier?: InputMaybe<User_Relationships_Bool_Exp>;
-  supplier_aggregate?: InputMaybe<User_Relationships_Aggregate_Bool_Exp>;
+  profile_image?: InputMaybe<String_Comparison_Exp>;
   uid?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user_1?: InputMaybe<User_Orders_Bool_Exp>;
-  user_1_aggregate?: InputMaybe<User_Orders_Aggregate_Bool_Exp>;
-  user_2?: InputMaybe<User_Orders_Bool_Exp>;
-  user_2_aggregate?: InputMaybe<User_Orders_Aggregate_Bool_Exp>;
-  user_role?: InputMaybe<User_Roles_Bool_Exp>;
-  user_role_aggregate?: InputMaybe<User_Roles_Aggregate_Bool_Exp>;
+  userOrdersByUserId2?: InputMaybe<User_Orders_Bool_Exp>;
+  userOrdersByUserId2_aggregate?: InputMaybe<User_Orders_Aggregate_Bool_Exp>;
+  userRelationshipsBySupplierId?: InputMaybe<User_Relationships_Bool_Exp>;
+  userRelationshipsBySupplierId_aggregate?: InputMaybe<User_Relationships_Aggregate_Bool_Exp>;
+  user_orders?: InputMaybe<User_Orders_Bool_Exp>;
+  user_orders_aggregate?: InputMaybe<User_Orders_Aggregate_Bool_Exp>;
+  user_relationships?: InputMaybe<User_Relationships_Bool_Exp>;
+  user_relationships_aggregate?: InputMaybe<User_Relationships_Aggregate_Bool_Exp>;
+  user_roles?: InputMaybe<User_Roles_Bool_Exp>;
+  user_roles_aggregate?: InputMaybe<User_Roles_Aggregate_Bool_Exp>;
 };
 
 /** unique or primary key constraints on table "users" */
@@ -4974,14 +4976,15 @@ export type Users_Insert_Input = {
   last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
   messages?: InputMaybe<Messages_Arr_Rel_Insert_Input>;
   name?: InputMaybe<Scalars['String']['input']>;
-  owner?: InputMaybe<User_Relationships_Arr_Rel_Insert_Input>;
   products?: InputMaybe<Products_Arr_Rel_Insert_Input>;
-  supplier?: InputMaybe<User_Relationships_Arr_Rel_Insert_Input>;
+  profile_image?: InputMaybe<Scalars['String']['input']>;
   uid?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  user_1?: InputMaybe<User_Orders_Arr_Rel_Insert_Input>;
-  user_2?: InputMaybe<User_Orders_Arr_Rel_Insert_Input>;
-  user_role?: InputMaybe<User_Roles_Arr_Rel_Insert_Input>;
+  userOrdersByUserId2?: InputMaybe<User_Orders_Arr_Rel_Insert_Input>;
+  userRelationshipsBySupplierId?: InputMaybe<User_Relationships_Arr_Rel_Insert_Input>;
+  user_orders?: InputMaybe<User_Orders_Arr_Rel_Insert_Input>;
+  user_relationships?: InputMaybe<User_Relationships_Arr_Rel_Insert_Input>;
+  user_roles?: InputMaybe<User_Roles_Arr_Rel_Insert_Input>;
 };
 
 /** aggregate max on columns */
@@ -4993,6 +4996,7 @@ export type Users_Max_Fields = {
   last_seen?: Maybe<Scalars['timestamptz']['output']>;
   last_typed?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  profile_image?: Maybe<Scalars['String']['output']>;
   uid?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
@@ -5006,6 +5010,7 @@ export type Users_Min_Fields = {
   last_seen?: Maybe<Scalars['timestamptz']['output']>;
   last_typed?: Maybe<Scalars['timestamptz']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  profile_image?: Maybe<Scalars['String']['output']>;
   uid?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
@@ -5042,14 +5047,15 @@ export type Users_Order_By = {
   last_typed?: InputMaybe<Order_By>;
   messages_aggregate?: InputMaybe<Messages_Aggregate_Order_By>;
   name?: InputMaybe<Order_By>;
-  owner_aggregate?: InputMaybe<User_Relationships_Aggregate_Order_By>;
   products_aggregate?: InputMaybe<Products_Aggregate_Order_By>;
-  supplier_aggregate?: InputMaybe<User_Relationships_Aggregate_Order_By>;
+  profile_image?: InputMaybe<Order_By>;
   uid?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
-  user_1_aggregate?: InputMaybe<User_Orders_Aggregate_Order_By>;
-  user_2_aggregate?: InputMaybe<User_Orders_Aggregate_Order_By>;
-  user_role_aggregate?: InputMaybe<User_Roles_Aggregate_Order_By>;
+  userOrdersByUserId2_aggregate?: InputMaybe<User_Orders_Aggregate_Order_By>;
+  userRelationshipsBySupplierId_aggregate?: InputMaybe<User_Relationships_Aggregate_Order_By>;
+  user_orders_aggregate?: InputMaybe<User_Orders_Aggregate_Order_By>;
+  user_relationships_aggregate?: InputMaybe<User_Relationships_Aggregate_Order_By>;
+  user_roles_aggregate?: InputMaybe<User_Roles_Aggregate_Order_By>;
 };
 
 /** primary key columns input for table: users */
@@ -5072,6 +5078,8 @@ export enum Users_Select_Column {
   /** column name */
   Name = 'name',
   /** column name */
+  ProfileImage = 'profile_image',
+  /** column name */
   Uid = 'uid',
   /** column name */
   UpdatedAt = 'updated_at'
@@ -5085,6 +5093,7 @@ export type Users_Set_Input = {
   last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
   last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  profile_image?: InputMaybe<Scalars['String']['input']>;
   uid?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -5123,6 +5132,7 @@ export type Users_Stream_Cursor_Value_Input = {
   last_seen?: InputMaybe<Scalars['timestamptz']['input']>;
   last_typed?: InputMaybe<Scalars['timestamptz']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  profile_image?: InputMaybe<Scalars['String']['input']>;
   uid?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
@@ -5147,6 +5157,8 @@ export enum Users_Update_Column {
   LastTyped = 'last_typed',
   /** column name */
   Name = 'name',
+  /** column name */
+  ProfileImage = 'profile_image',
   /** column name */
   Uid = 'uid',
   /** column name */
@@ -5180,12 +5192,10 @@ export type Users_Variance_Fields = {
   id?: Maybe<Scalars['Float']['output']>;
 };
 
-export type MessagesSubscriptionSubscriptionVariables = Exact<{
-  _eq?: InputMaybe<Scalars['Int']['input']>;
-}>;
+export type MessagesSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessagesSubscriptionSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: number, text: string, timestamp: any, user_id: number }> };
+export type MessagesSubscriptionSubscription = { __typename?: 'subscription_root', messages: Array<{ __typename?: 'messages', id: number, text: string, timestamp: any, user_id: number, user: { __typename?: 'users', name?: string | null } }> };
 
 export type AddUserMutationVariables = Exact<{
   objects: Array<Users_Insert_Input> | Users_Insert_Input;
@@ -5220,14 +5230,22 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: number }> };
 
+export type UsersSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersSubscriptionSubscription = { __typename?: 'subscription_root', users: Array<{ __typename?: 'users', id: number, name?: string | null }> };
+
 
 export const MessagesSubscriptionDocument = gql`
-    subscription messagesSubscription($_eq: Int = 10) {
-  messages(where: {user_id: {_eq: $_eq}}, order_by: {id: desc}, limit: 1) {
+    subscription messagesSubscription {
+  messages(order_by: {id: desc}) {
     id
     text
     timestamp
     user_id
+    user {
+      name
+    }
   }
 }
     `;
@@ -5244,7 +5262,6 @@ export const MessagesSubscriptionDocument = gql`
  * @example
  * const { data, loading, error } = useMessagesSubscriptionSubscription({
  *   variables: {
- *      _eq: // value for '_eq'
  *   },
  * });
  */
@@ -5449,3 +5466,33 @@ export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const UsersSubscriptionDocument = gql`
+    subscription usersSubscription {
+  users {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useUsersSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useUsersSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUsersSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersSubscriptionSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UsersSubscriptionSubscription, UsersSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UsersSubscriptionSubscription, UsersSubscriptionSubscriptionVariables>(UsersSubscriptionDocument, options);
+      }
+export type UsersSubscriptionSubscriptionHookResult = ReturnType<typeof useUsersSubscriptionSubscription>;
+export type UsersSubscriptionSubscriptionResult = Apollo.SubscriptionResult<UsersSubscriptionSubscription>;

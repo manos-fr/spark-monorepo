@@ -9,9 +9,10 @@ import { useAuthStore } from '../state/useStore'; // Import your token refresh f
 import { useMemo } from 'react';
 import * as Device from 'expo-device';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { WebSocketLink } from '@apollo/client/link/ws';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { UserType } from '@spark-monorepo/spark-shared';
 import { auth } from '../firebase-config';
+import { createClient } from 'graphql-ws';
 
 const {
   EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR,
@@ -45,11 +46,9 @@ export const useGraphQlClient = () => {
   const httpLink = createHttpLink({
     uri: HASURA_URL,
   });
-
-  const wsLink = new WebSocketLink({
-    uri: `wss://${HASURA_URL}/v1/graphql`,
-    options: {
-      reconnect: true,
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: `wss://${HASURA_URL?.replaceAll('https://', '')}`,
       connectionParams: async () => {
         token = (user as UserType)?.stsTokenManager;
 
@@ -63,8 +62,8 @@ export const useGraphQlClient = () => {
           },
         };
       },
-    },
-  });
+    }),
+  );
 
   const splitLink = split(
     ({ query }) => {

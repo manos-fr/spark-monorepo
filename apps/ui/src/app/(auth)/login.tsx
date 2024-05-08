@@ -15,10 +15,13 @@ export const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const { user } = await appLogin(auth, {
-        email,
-        password,
-      });
+      const user = (
+        await appLogin(auth, {
+          email,
+          password,
+        })
+      )?.user;
+
       if (user) {
         router.push('/home-page');
       }

@@ -44,10 +44,12 @@ export const SignUp = () => {
     }
 
     try {
-      const { user } = await appRegister(auth, {
-        email,
-        password,
-      });
+      const user = (
+        await appRegister(auth, {
+          email,
+          password,
+        })
+      )?.user;
 
       if (user) {
         const objects = {

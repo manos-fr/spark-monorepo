@@ -48,6 +48,11 @@ export const useGraphQlClient = () => {
   });
   const wsLink = new GraphQLWsLink(
     createClient({
+      on: {
+        connected: () => console.log('socket connected'),
+        closed: () => console.log('socket closed'),
+        error: (error) => console.error({ error }),
+      },
       url: `wss://${HASURA_URL?.replaceAll('https://', '')}`,
       connectionParams: async () => {
         token = (user as UserType)?.stsTokenManager;

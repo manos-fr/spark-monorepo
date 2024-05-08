@@ -68,9 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       };
     } catch (error: any | unknown) {
       console.log('register handled error', { error });
-      // set(() => ({ registerError: error?.message }));
-      console.log(error.code);
-      throw error;
+      set(() => ({ registerError: error?.message }));
     }
   },
 
@@ -89,8 +87,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       };
     } catch (error: any) {
       console.log(error);
-      // set({ loginError: error?.message });
-      throw new Error(error);
+      set({ loginError: error?.message });
     }
   },
 
@@ -108,7 +105,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return { isLoggedIn: get().isLoggedIn } satisfies { isLoggedIn: boolean };
     } catch (error: any) {
       console.log(error);
-      throw new Error(error);
     }
   },
 }));

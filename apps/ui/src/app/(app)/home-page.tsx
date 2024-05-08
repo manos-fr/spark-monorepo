@@ -1,12 +1,20 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import SupplierCard from '../../components/user/SupplierCard';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
-import { useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { useMessagesSubscriptionSubscription } from '../../graphql/__generated__/graphql';
-import { useGraphQlClient } from '../../hooks/useGraphQlClient';
+import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../state/useStore';
+import Chat from '../../components/chat/chat';
+import { useGetUserQuery } from '../../graphql/__generated__/graphql';
+import { useGraphQlClient } from '../../hooks/useGraphQlClient';
+import { User } from 'firebase/auth';
 
 const dummySuppliers = [
   {
@@ -44,14 +52,22 @@ const dummySuppliers = [
 const HomePage = () => {
   const scrollViewRef = useRef<null | ScrollView>(null);
   const router = useRouter();
-  const { dbUser, user } = useAuthStore((state) => state);
+  const { user } = useAuthStore((state) => state);
 
-  const { data } = useMessagesSubscriptionSubscription({
+  const { data: dbUserId } = useGetUserQuery({
     client: useGraphQlClient(),
-    variables: {},
+    skip: !user,
+    variables: { uid: { _eq: user?.uid } },
   });
 
-  console.log(data?.messages[0].text);
+  useEffect(() => {
+    useAuthStore.setState(() => ({
+      dbUser: {
+        ...(user as User),
+        id: dbUserId?.users?.[0]?.id,
+      },
+    }));
+  }, [dbUserId?.users, user]);
 
   return (
     <>

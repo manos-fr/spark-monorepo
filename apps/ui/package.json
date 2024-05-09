@@ -6,7 +6,7 @@
   "dependencies": {
     "@testing-library/jest-native": "*",
     "@testing-library/react-native": "*",
-    "metro-config": "*",
+    "metro-config": "~0.80.4",
     "react-native": "*",
     "expo": "*",
     "react-native-svg": "*",

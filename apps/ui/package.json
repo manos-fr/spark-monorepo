@@ -6,7 +6,7 @@
   "dependencies": {
     "@testing-library/jest-native": "*",
     "@testing-library/react-native": "*",
-    "metro-config": "*",
+    "metro-config": "~0.80.4",
     "react-native": "*",
     "expo": "*",
     "react-native-svg": "*",
@@ -16,7 +16,6 @@
     "react-native-svg-transformer": "*",
     "react": "*",
     "twrnc": "*",
-    "expo-router": "^2.0.0",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "expo-linking": "~5.0.2",
@@ -37,7 +36,8 @@
     "@graphql-codegen/cli": "*",
     "@graphql-typed-document-node/core": "*",
     "graphql": "*",
-    "@react-native-async-storage/async-storage": "*"
+    "@react-native-async-storage/async-storage": "*",
+    "expo-router": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp package-lock.json apps/ui",

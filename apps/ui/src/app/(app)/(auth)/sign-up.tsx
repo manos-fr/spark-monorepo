@@ -50,6 +50,7 @@ export const SignUp = () => {
         }));
         router.replace('/home-page');
       } catch (error) {
+        router.replace('/sign-up');
         console.log({ error });
       }
     }

@@ -56,3 +56,5 @@ cache/
 
 
 apps/ui-e2e/artifacts
+
+.nx/cache

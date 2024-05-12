@@ -8,8 +8,8 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import { auth } from '../firebase-config';
 import { emailVerification } from '../utils/auth-utils';
+import { auth } from '../../firebase-config';
 
 export const useCartStore = create<CartState>((set, get) => ({
   user_id: undefined,
@@ -45,10 +45,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   appRegister: async (
     auth: Auth | null,
     credentials: Credentials,
-  ): Promise<{
-    isLoggedIn: boolean;
-    user: User;
-  }> => {
+  ): Promise<
+    | {
+        isLoggedIn: boolean;
+        user: User;
+      }
+    | undefined
+  > => {
     const { email, password } = credentials;
     try {
       const { user } = await createUserWithEmailAndPassword(

@@ -26,7 +26,6 @@ export const Chat = ({ chatUserId }: { chatUserId: string }) => {
       <GiftedChat
         isTyping
         loadEarlier
-        renderUsernameOnMessage
         user={{ ...dbUser, _id: dbUser?.id || 0 }}
         renderLoadEarlier={() =>
           loading && <ActivityIndicator size="large"></ActivityIndicator>

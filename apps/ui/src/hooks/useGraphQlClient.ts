@@ -11,14 +11,15 @@ import * as Device from 'expo-device';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { UserType } from '@spark-monorepo/spark-shared';
-import { auth } from '../firebase-config';
+import { auth } from '../../firebase-config';
 import { createClient } from 'graphql-ws';
 
-const {
-  EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR,
-  EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE,
-  EXPO_PUBLIC_HASURA_ENDPOINT_PROD,
-} = process.env;
+const EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR =
+  process.env.EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR;
+const EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE =
+  process.env.EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE;
+const EXPO_PUBLIC_HASURA_ENDPOINT_PROD =
+  process.env.EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
 
 // const HASURA_URL = Device.isDevice
 //   ? EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE

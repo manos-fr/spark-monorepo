@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import { useAuthStore } from '../state/useStore';
 import { useEffect } from 'react';
-import { auth } from '../firebase-config';
+import { auth } from '../../firebase-config';
 import { Auth, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'expo-router';
 import SignUp from './(auth)/sign-up';

@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
-import TextInputLabel from '../../../components/user-input/TextInputLabel';
-import { useAuthStore } from '../../../state/useStore';
+import TextInputLabel from '../../components/user-input/TextInputLabel';
+import { useAuthStore } from '../../state/useStore';
 
 export const Login = () => {
   const { auth, appLogin } = useAuthStore((state) => state);

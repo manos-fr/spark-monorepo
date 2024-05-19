@@ -7,9 +7,9 @@ import {
   Auth,
   signOut,
   User,
-  sendEmailVerification,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
+import { emailVerification } from '../utils/auth-utils';
 
 export const useCartStore = create<CartState>((set, get) => ({
   user_id: undefined,
@@ -66,10 +66,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isLoggedIn: boolean;
         user: User;
       };
-    } catch (error: any) {
+    } catch (error: any | unknown) {
       console.log('register handled error', { error });
-      set(() => ({ registerError: error?.message }));
-      throw new Error(error);
+      // set(() => ({ registerError: error?.message }));
+      console.log(error.code);
+      throw error;
     }
   },
 
@@ -111,16 +112,3 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 }));
-
-export const emailVerification = async () => {
-  const user = auth.currentUser;
-  try {
-    await sendEmailVerification(user as User, {
-      handleCodeInApp: true,
-      url: 'https://hasura-auth-4f0a3.firebaseapp.com',
-    });
-    console.log('Email sent successfully');
-  } catch (error) {
-    console.log('WHERE MA MAIL BRUV?', error);
-  }
-};

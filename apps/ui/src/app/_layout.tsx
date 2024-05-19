@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { auth } from '../firebase-config';
 import { Auth, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'expo-router';
-import SignUp from '../../src/app/(app)/(auth)/sign-up';
+import SignUp from './(auth)/sign-up';
 
 const queryClient = new QueryClient({
   defaultOptions: {

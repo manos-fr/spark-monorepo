@@ -9,6 +9,7 @@ import {
   User,
 } from 'firebase/auth';
 import { auth } from '../firebase-config';
+import { emailVerification } from '../utils/auth-utils';
 
 export const useCartStore = create<CartState>((set, get) => ({
   user_id: undefined,
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   loginError: undefined,
   registerError: undefined,
   generalError: undefined,
+
   appRegister: async (
     auth: Auth | null,
     credentials: Credentials,
@@ -54,18 +56,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         email as string,
         password as string,
       );
+      if (auth?.currentUser) {
+        await emailVerification();
+        console.log('Verification mail sent');
+      }
       set(() => ({ user, isLoggedIn: true }));
 
       return { isLoggedIn: get().isLoggedIn, user } satisfies {
         isLoggedIn: boolean;
         user: User;
       };
-    } catch (error: any) {
+    } catch (error: any | unknown) {
       console.log('register handled error', { error });
-      set(() => ({ registerError: error?.message }));
-      throw new Error(error);
+      // set(() => ({ registerError: error?.message }));
+      console.log(error.code);
+      throw error;
     }
   },
+
   appLogin: async (auth: Auth | null, credentials: Credentials) => {
     const { email, password } = credentials;
     try {
@@ -81,10 +89,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       };
     } catch (error: any) {
       console.log(error);
-      set({ loginError: error?.message });
+      // set({ loginError: error?.message });
       throw new Error(error);
     }
   },
+
   appSignOut: async (auth: Auth | null) => {
     try {
       await signOut(auth as Auth);

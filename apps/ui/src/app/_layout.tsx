@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
-import { useAuthStore } from '../state/useStore';
+import { useAuthStore, useErrorStore } from '../state/useStore';
 import { useEffect } from 'react';
 import { auth } from '../../firebase-config';
 import { Auth, onAuthStateChanged } from 'firebase/auth';
@@ -25,9 +25,7 @@ const queryClient = new QueryClient({
 
 export default function Root() {
   const router = useRouter();
-  const { loginError, generalError, registerError } = useAuthStore(
-    (state) => state,
-  );
+  const { error } = useErrorStore((state) => state);
 
   useEffect(() => {
     useAuthStore.setState(() => ({ auth }));
@@ -48,17 +46,6 @@ export default function Root() {
       },
     );
 
-    // const unSubState = useAuthStore.subscribe(async (state) => {
-    //   console.log({ state });
-    //   if (state.generalError || state.loginError || state.registerError) {
-    //     if (state.generalError?.includes('Could not verify JWT: JWTExpired')) {
-    //       await auth?.currentUser?.getIdToken(true);
-    //     } else {
-    //       // router.push('/error');
-    //     }
-    //   }
-    // });
-
     return () => {
       unSubscribeOnAuthStateChanged();
       // unSubState();
@@ -69,9 +56,7 @@ export default function Root() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <Slot />
-        {(loginError || generalError || registerError) && (
-          <ErrorComponent error={loginError || generalError || registerError} />
-        )}
+        {error && <ErrorComponent error={error} />}
       </SafeAreaProvider>
     </QueryClientProvider>
   );

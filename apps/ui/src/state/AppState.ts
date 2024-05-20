@@ -17,9 +17,6 @@ export type AuthState = {
   auth: Auth | null;
   initialized: boolean;
   isLoggedIn: boolean;
-  registerError: string | undefined;
-  loginError: string | undefined;
-  generalError: any;
   appRegister: (
     auth: Auth | null,
     credentials: Credentials,
@@ -29,4 +26,10 @@ export type AuthState = {
     credentials: Credentials,
   ) => Promise<{ isLoggedIn: boolean; user: User } | undefined>;
   appSignOut: (auth: Auth) => Promise<{ isLoggedIn: boolean } | undefined>;
+};
+
+export type ErrorState = {
+  error: string | undefined;
+  setError: (error: any) => void;
+  clearError: () => void;
 };

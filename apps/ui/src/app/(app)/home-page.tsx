@@ -11,10 +11,11 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../state/useStore';
-import Chat from '../../components/chat/chat';
 import { useGetUserQuery } from '../../graphql/__generated__/graphql';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import { User } from 'firebase/auth';
+import Conversations from '../../components/chat/conversations';
+import Chat from '../../components/chat/chat';
 
 const dummySuppliers = [
   {
@@ -53,34 +54,73 @@ const HomePage = () => {
   const scrollViewRef = useRef<null | ScrollView>(null);
   const router = useRouter();
   const { user } = useAuthStore((state) => state);
+  const [isConversationsOpen, setConversationsOpen] = useState(false);
+  const [isChatOpen, setChatOpen] = useState(false);
+  const [conversationId, setConversationId] = useState<number>(0);
 
-  const { data: dbUserId } = useGetUserQuery({
+  const { data: dbUser } = useGetUserQuery({
     client: useGraphQlClient(),
     skip: !user,
     variables: { uid: { _eq: user?.uid } },
   });
 
+  const handleOpenChat = (conversationId: number) => {
+    setConversationId(conversationId);
+    setChatOpen(!isChatOpen);
+  };
+
   useEffect(() => {
     useAuthStore.setState(() => ({
       dbUser: {
         ...(user as User),
-        id: dbUserId?.users?.[0]?.id,
+        id: dbUser?.users?.[0]?.id,
       },
     }));
-  }, [dbUserId?.users, user]);
+  }, [dbUser?.users, user]);
 
   return (
     <>
-      <View style={tw`flex-row justify-end mt-12`}>
-        <Pressable onPress={() => router.push('/settings')}>
-          <Ionicons
-            name="settings-outline"
-            size={26}
-            color="black"
-            style={tw`m-5`}
-          />
-        </Pressable>
-      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        ref={(ref) => {
+          scrollViewRef.current = ref;
+        }}
+        contentInsetAdjustmentBehavior="automatic"
+        onStartShouldSetResponder={() => true}
+      >
+        <View style={tw`flex mx-5 h-full`}>
+          <Text style={tw`text-2xl font-bold my-3`}>Οι προμηθευτές μου</Text>
+          <View style={tw`flex flex-row flex-wrap justify-between`}>
+            {dummySuppliers.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => router.push(`/supplier/${item.id}`)}
+              >
+                <SupplierCard
+                  name={item.name}
+                  imageUrl={item.imageUrl}
+                  address={item.address}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <View style={tw`mt-10 justify-end items-end mb-10`}>
+            <Pressable
+              onPressIn={() => setConversationsOpen(!isConversationsOpen)}
+              style={tw`bg-slate-400 rounded-lg`}
+            >
+              <Text style={tw`px-5 py-2 justify-center items-center`}>
+                Conversations
+              </Text>
+            </Pressable>
+            {isConversationsOpen && (
+              <Conversations handleOpenChat={handleOpenChat} />
+            )}
+            {isChatOpen && <Chat conversationId={conversationId} />}
+          </View>
+        </View>
+      </ScrollView>
       <ScrollView
         showsVerticalScrollIndicator={false}
         ref={(ref) => {

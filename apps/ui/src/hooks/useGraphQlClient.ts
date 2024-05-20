@@ -5,9 +5,8 @@ import {
   split,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { useAuthStore } from '../state/useStore'; // Import your token refresh function
+import { useAuthStore, useErrorStore } from '../state/useStore'; // Import your token refresh function
 import { useMemo } from 'react';
-import * as Device from 'expo-device';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { UserType } from '@spark-monorepo/spark-shared';
@@ -21,13 +20,10 @@ const EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE =
 const EXPO_PUBLIC_HASURA_ENDPOINT_PROD =
   process.env.EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
 
-// const HASURA_URL = Device.isDevice
-//   ? EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE
-//   : EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR;
-
 const HASURA_URL = EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
 
 export const useGraphQlClient = () => {
+  const { setError } = useErrorStore((state) => state);
   const { user } = useAuthStore((state) => state);
   let token: UserType['stsTokenManager'] | null;
 
@@ -52,7 +48,9 @@ export const useGraphQlClient = () => {
       on: {
         connected: () => console.log('socket connected'),
         closed: () => console.log('socket closed'),
-        error: (error) => console.error({ error }),
+        error: (error) => {
+          setError(error);
+        },
       },
       url: `wss://${HASURA_URL?.replaceAll('https://', '')}`,
       connectionParams: async () => {

@@ -20,7 +20,7 @@ export const Welcome = () => (
         {/* Doesn't work - Need to figure out images */}
         <Image
           style={tw`flex-1`}
-          source="/assets/logo/spark-spash-horizontal"
+          source="../../../assets/logo/spark-logo-horizontal.png"
           placeholder={blurhash}
           contentFit="cover"
         />

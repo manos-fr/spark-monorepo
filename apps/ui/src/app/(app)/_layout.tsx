@@ -4,17 +4,32 @@ import { StatusBar, SafeAreaView, View, AppState } from 'react-native';
 import tw from 'twrnc';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback, useEffect } from 'react';
-import { useAuthStore } from '../../state/useStore';
+import { useAuthStore, useErrorStore } from '../../state/useStore';
 import { useUpdateUserLastSeenMutation } from '../../graphql/__generated__/graphql';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 
 export default function AppLayout() {
   const insets = useSafeAreaInsets();
   const { dbUser, user } = useAuthStore((state) => state);
+  const { setError } = useErrorStore((state) => state);
 
   const [updateUserLastSeenMutation] = useUpdateUserLastSeenMutation({
     client: useGraphQlClient(),
   });
+
+  const updateUserLastSeen = useCallback(async () => {
+    const userId = dbUser?.id;
+    if (!userId || !user) return;
+
+    try {
+      const { data } = await updateUserLastSeenMutation({
+        variables: { id: userId },
+      });
+      console.log({ data: data?.update_users_by_pk });
+    } catch (error) {
+      setError(error);
+    }
+  }, [dbUser?.id, updateUserLastSeenMutation, user, setError]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -41,20 +56,6 @@ export default function AppLayout() {
       listener.remove();
     };
   }, [handleAppStateChange]);
-
-  const updateUserLastSeen = useCallback(async () => {
-    const userId = dbUser?.id;
-    if (!userId || !user) return;
-
-    try {
-      const { data } = await updateUserLastSeenMutation({
-        variables: { id: userId },
-      });
-      console.log({ data: data?.update_users_by_pk });
-    } catch (error) {
-      console.log('Error updating user last seen', { error });
-    }
-  }, [dbUser?.id, updateUserLastSeenMutation, user]);
 
   return (
     <>

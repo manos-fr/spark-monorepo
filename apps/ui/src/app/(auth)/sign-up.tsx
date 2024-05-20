@@ -2,8 +2,9 @@
 import { SafeAreaView, ScrollView, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
-import { useAuthStore } from '../../state/useStore';
 import { useState } from 'react';
+import { useAuthStore, useErrorStore } from '../../state/useStore';
+import { useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import { useAddUserMutation } from 'apps/ui/src/graphql/__generated__/graphql';
@@ -11,6 +12,7 @@ import TextInputLabel from '../../components/user-input/TextInputLabel';
 
 export const SignUp = () => {
   const { auth, appRegister } = useAuthStore((state) => state);
+  const { setError } = useErrorStore((state) => state);
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -21,6 +23,7 @@ export const SignUp = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
+  const displayNameRef = useRef('');
   const [addUserMutation, { loading, error }] = useAddUserMutation({
     client: useGraphQlClient(),
   });
@@ -71,7 +74,7 @@ export const SignUp = () => {
 
         router.replace('/home-page');
       }
-    } catch (error: unknown | any) {
+    } catch (error: any) {
       handleFirebaseError(error.code);
       console.log(error.code);
     }

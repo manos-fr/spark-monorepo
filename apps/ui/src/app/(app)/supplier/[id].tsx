@@ -11,6 +11,8 @@ import {
 import tw from 'twrnc';
 import SupplierList from '../../../components/user/SupplierList';
 import { useLocalSearchParams } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const supplyCategory = [
   'Λαχανικά',
@@ -26,11 +28,15 @@ const SupplierDetail = () => {
   const [activeSupplyCategory, setActiveSupplyCategory] = useState(
     supplyCategory[0],
   );
+  const router = useRouter();
   const [isChatOpen, setChatOpen] = useState(false);
   const searchParams = useLocalSearchParams();
 
   return (
     <ScrollView>
+      <Pressable onPress={() => router.back()}>
+        <Ionicons name="chevron-back-outline" size={26} color="black" />
+      </Pressable>
       <View style={tw`items-center`}>
         <Text style={tw`text-2xl font-bold`}>Supplier Detail Page</Text>
         <Text style={tw`text-lg`}>Supplier ID:</Text>

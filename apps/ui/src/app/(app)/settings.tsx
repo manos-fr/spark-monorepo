@@ -14,7 +14,7 @@ const SettingsPage = () => {
 
   const handleSignOut = async () => {
     try {
-      const { isLoggedIn } = await appSignOut(auth as Auth);
+      const isLoggedIn = (await appSignOut(auth as Auth))?.isLoggedIn;
       if (!isLoggedIn) {
         router.replace('/welcome');
       }

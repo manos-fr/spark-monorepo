@@ -26,12 +26,12 @@ const Conversations = ({
   return data?.conversation_users?.map((item) => (
     <Pressable
       key={item.conversation.id}
-      onPress={() => {
-        handleOpenChat(item.conversation.id);
-        return console.log('Conversation pressed');
-      }}
+      onPress={() =>
+        // handleOpenChat(item.conversation.id);
+        console.log('Conversation pressed')
+      }
       style={({ pressed }) => [
-        tw`p-4 my-2 mr-1 rounded-lg shadow-lg flex-row items-center transition-transform duration-150 ease-in-out`,
+        tw`p-4 my-2 mr-1 rounded-lg shadow-lg flex-row items-center`,
         pressed ? tw`bg-gray-200 opacity-90 ` : tw`bg-white opacity-100 `,
       ]}
     >

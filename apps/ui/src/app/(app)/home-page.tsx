@@ -79,75 +79,46 @@ const HomePage = () => {
   }, [dbUser?.users, user]);
 
   return (
-    <>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        ref={(ref) => {
-          scrollViewRef.current = ref;
-        }}
-        contentInsetAdjustmentBehavior="automatic"
-        onStartShouldSetResponder={() => true}
-      >
-        <View style={tw`flex mx-5 h-full`}>
-          <Text style={tw`text-2xl font-bold my-3`}>Οι προμηθευτές μου</Text>
-          <View style={tw`flex flex-row flex-wrap justify-between`}>
-            {dummySuppliers.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                onPress={() => router.push(`/supplier/${item.id}`)}
-              >
-                <SupplierCard
-                  name={item.name}
-                  imageUrl={item.imageUrl}
-                  address={item.address}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <View style={tw`mt-10 justify-end items-end mb-10`}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      ref={(ref) => {
+        scrollViewRef.current = ref;
+      }}
+      contentInsetAdjustmentBehavior="automatic"
+      onStartShouldSetResponder={() => true}
+    >
+      <View style={tw`flex-1 m-4`}>
+        <Text style={tw`text-2xl font-bold mb-4`}>Οι προμηθευτές μου</Text>
+        <View style={tw`flex flex-row flex-wrap justify-between`}>
+          {dummySuppliers.map((item) => (
             <Pressable
-              onPressIn={() => setConversationsOpen(!isConversationsOpen)}
-              style={tw`bg-slate-400 rounded-lg`}
+              key={item.id}
+              onPress={() => router.push(`/supplier/${item.id}`)}
             >
-              <Text style={tw`px-5 py-2 justify-center items-center`}>
-                Conversations
-              </Text>
+              <SupplierCard
+                name={item.name}
+                imageUrl={item.imageUrl}
+                address={item.address}
+              />
             </Pressable>
-            {isConversationsOpen && (
-              <Conversations handleOpenChat={handleOpenChat} />
-            )}
-            {isChatOpen && <Chat conversationId={conversationId} />}
-          </View>
+          ))}
         </View>
-      </ScrollView>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        ref={(ref) => {
-          scrollViewRef.current = ref;
-        }}
-        contentInsetAdjustmentBehavior="automatic"
-        onStartShouldSetResponder={() => true}
-      >
-        <View style={tw`flex-1 m-4`}>
-          <Text style={tw`text-2xl font-bold mb-4`}>Οι προμηθευτές μου</Text>
-          <View style={tw`flex flex-row flex-wrap justify-between`}>
-            {dummySuppliers.map((item) => (
-              <Pressable
-                key={item.id}
-                onPress={() => router.push(`/supplier/${item.id}`)}
-              >
-                <SupplierCard
-                  name={item.name}
-                  imageUrl={item.imageUrl}
-                  address={item.address}
-                />
-              </Pressable>
-            ))}
-          </View>
+        <View style={tw`mt-10 justify-end items-end mb-10`}>
+          <Pressable
+            onPressIn={() => setConversationsOpen(!isConversationsOpen)}
+            style={tw`bg-slate-400 rounded-lg`}
+          >
+            <Text style={tw`px-5 py-2 justify-center items-center`}>
+              Conversations
+            </Text>
+          </Pressable>
+          {isConversationsOpen && (
+            <Conversations handleOpenChat={handleOpenChat} />
+          )}
+          {isChatOpen && <Chat conversationId={conversationId} />}
         </View>
-      </ScrollView>
-    </>
+      </View>
+    </ScrollView>
   );
 };
 

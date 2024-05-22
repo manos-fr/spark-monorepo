@@ -32,11 +32,17 @@
     "graphql": "*",
     "@react-native-async-storage/async-storage": "*",
     "expo-router": "*",
-    "react-native-safe-area-context": "*"
+    "react-native-safe-area-context": "*",
+    "graphql-ws": "*",
+    "react-native-gifted-chat": "*",
+    "expo-updates": "~0.25.10",
+    "classnames": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/ui && cp package-lock.json apps/ui",
-    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/ui"
+    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/ui",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "devDependencies": {}
 }

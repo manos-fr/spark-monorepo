@@ -5,7 +5,14 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "extra": {},
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "39f9a38d-9560-48a4-9380-571dfbcbbd21"
+      }
+    },
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -21,12 +28,15 @@
       "backgroundColor": "#307A59"
     },
     "scheme": "ui",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.company.calendar"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -37,7 +47,10 @@
         "@config-plugins/detox",
         {
           "skipProguard": false,
-          "subdomains": ["10.0.2.2", "localhost"]
+          "subdomains": [
+            "10.0.2.2",
+            "localhost"
+          ]
         }
       ],
       "expo-router"

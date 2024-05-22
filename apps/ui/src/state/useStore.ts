@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AuthState, CartState } from './AppState';
+import { AuthState, CartState, ErrorState } from './AppState';
 import { Credentials, Product } from '@spark-monorepo/spark-shared';
 import {
   signInWithEmailAndPassword,
@@ -7,9 +7,11 @@ import {
   Auth,
   signOut,
   User,
+  updateProfile,
 } from 'firebase/auth';
-import { auth } from '../firebase-config';
 import { emailVerification } from '../utils/auth-utils';
+import { auth } from '../../firebase-config';
+import { router } from 'expo-router';
 
 export const useCartStore = create<CartState>((set, get) => ({
   user_id: undefined,
@@ -38,18 +40,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   auth: null,
   initialized: false,
   isLoggedIn: false,
-  loginError: undefined,
-  registerError: undefined,
-  generalError: undefined,
-
-  appRegister: async (
-    auth: Auth | null,
-    credentials: Credentials,
-  ): Promise<{
-    isLoggedIn: boolean;
-    user: User;
-  }> => {
-    const { email, password } = credentials;
+  appRegister: async (auth: Auth | null, credentials: Credentials) => {
+    const { email, password, displayName } = credentials;
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth as Auth,
@@ -60,6 +52,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         await emailVerification();
         console.log('Verification mail sent');
       }
+      await updateProfile(user as User, { displayName: displayName as string });
       set(() => ({ user, isLoggedIn: true }));
 
       return { isLoggedIn: get().isLoggedIn, user } satisfies {
@@ -68,9 +61,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       };
     } catch (error: any | unknown) {
       console.log('register handled error', { error });
-      // set(() => ({ registerError: error?.message }));
-      console.log(error.code);
-      throw error;
+      useErrorStore.setState(() => ({ error: error?.message }));
+      router.push('/sign-up');
     }
   },
 
@@ -89,8 +81,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       };
     } catch (error: any) {
       console.log(error);
-      // set({ loginError: error?.message });
-      throw new Error(error);
+      useErrorStore.setState(() => ({ error: error?.message }));
     }
   },
 
@@ -101,14 +92,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         user: null,
         dbUser: null,
         isLoggedIn: false,
-        generalError: undefined,
-        loginError: undefined,
-        registerError: undefined,
       }));
+      useErrorStore.setState(() => ({ error: undefined }));
       return { isLoggedIn: get().isLoggedIn } satisfies { isLoggedIn: boolean };
     } catch (error: any) {
       console.log(error);
-      throw new Error(error);
+      useErrorStore.setState(() => ({ error: error?.message }));
     }
   },
+}));
+
+export const useErrorStore = create<ErrorState>((set) => ({
+  error: undefined,
+  setError: (error: any) => {
+    set({ error });
+    console.log({ error });
+  },
+  clearError: () => set({ error: undefined }),
 }));

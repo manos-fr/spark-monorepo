@@ -1,11 +1,11 @@
 import tw from 'twrnc';
 import { View, Text } from 'react-native';
 
-export const Footer = () => (
+export const Footer = ({ bottomInset }: { bottomInset: number }) => (
   <View
-    style={tw`flex items-center absolute bottom-0 left-0 right-0 min-h-15 bg-teal-700`}
+    style={tw`items-center absolute bottom-0 left-0 right-0 h-${bottomInset} bg-teal-700 opacity-90`}
   >
-    <Text style={tw`text-xl text-white m-4`}>This is a Footer</Text>
+    <Text style={tw`text-sm text-white p-4`}>This is a Footer</Text>
   </View>
 );
 

@@ -9,7 +9,7 @@ const blurhash =
 export const Welcome = () => (
   <SafeAreaView style={tw`bg-white flex-1 mx-1`}>
     <ScrollView>
-      <View style={tw`px-4 mt-18`}>
+      <View style={tw`px-4`}>
         <Text style={tw`font-extrabold text-black text-xl text-left mb-3 mt-8`}>
           Είσαι προμηθευτής; Σε έχουμε! Εστιατόριο; Κι εσένα σε έχουμε!
         </Text>
@@ -17,13 +17,15 @@ export const Welcome = () => (
           Μπες στη νέα εποχή και κάνε τις παραγγελίες σου πιο γρήγορα από ποτέ
         </Text>
 
-        {/* Doesn't work - Need to figure out images */}
-        <Image
-          style={tw`flex-1`}
-          source="/assets/logo/spark-spash-horizontal"
-          placeholder={blurhash}
-          contentFit="cover"
-        />
+        <View style={tw`flex justify-center items-center`}>
+          <Image
+            style={tw`w-70 h-70 rounded-lg mb-8`}
+            tintColor={'#015f21'}
+            source="../../../assets/logo/spark-logo-horizontal.png"
+            placeholder={blurhash}
+            contentFit="none"
+          />
+        </View>
 
         <Pressable
           onPress={() => router.push('/login')}

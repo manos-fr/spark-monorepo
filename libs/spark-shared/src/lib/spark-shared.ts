@@ -14,6 +14,7 @@ export type Product =
 export type Credentials = {
   email: string | undefined;
   password: string | undefined;
+  displayName?: string;
 };
 
 export type UserType = User & {

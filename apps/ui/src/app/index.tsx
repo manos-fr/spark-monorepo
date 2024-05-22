@@ -1,21 +1,20 @@
 import { Redirect, router, useRootNavigationState } from 'expo-router';
-import { useAuthStore } from '../state/useStore';
+import { useAuthStore, useErrorStore } from '../state/useStore';
 import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 
 export default function Index() {
   const navigationState = useRootNavigationState();
-  const { isLoggedIn, registerError, generalError, user } = useAuthStore(
-    (s) => s,
-  );
+  const { isLoggedIn, user } = useAuthStore((s) => s);
+  const { error } = useErrorStore((state) => state);
 
   useEffect(() => {
     if (!navigationState?.key) return;
 
     if (
       user &&
-      !registerError &&
-      !generalError?.response?.errors[0]?.message?.includes(
+      !error &&
+      !(error as any)?.response?.errors[0]?.message?.includes(
         'Could not verify JWT: JWSError',
       )
     ) {
@@ -23,13 +22,7 @@ export default function Index() {
     } else {
       router.push('/welcome');
     }
-  }, [
-    generalError?.response?.errors,
-    isLoggedIn,
-    registerError,
-    user,
-    navigationState?.key,
-  ]);
+  }, [error, isLoggedIn, user, navigationState?.key]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

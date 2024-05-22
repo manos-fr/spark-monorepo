@@ -20,3 +20,11 @@ export type Credentials = {
 export type UserType = User & {
   stsTokenManager: { accessToken: string | undefined; expirationTime: string };
 };
+
+export enum FirebaseErrors {
+  AUTH_EMAIL_ALREADY_IN_USE = 'auth/email-already-in-use',
+  AUTH_INVALID_EMAIL = 'auth/invalid-email',
+  AUTH_WRONG_PASSWORD = 'auth/wrong-password',
+  AUTH_USER_NOT_FOUND = 'auth/user-not-found',
+  AUTH_INVALID_PASSWORD = 'auth/invalid-password',
+}

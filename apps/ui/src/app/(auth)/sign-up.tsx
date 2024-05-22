@@ -1,49 +1,81 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { SafeAreaView, ScrollView, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useState } from 'react';
 import { useAuthStore, useErrorStore } from '../../state/useStore';
-import { useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
-import { useAddUserMutation } from 'apps/ui/src/graphql/__generated__/graphql';
+import { useAddUserMutation } from '../../graphql/__generated__/graphql';
 import TextInputLabel from '../../components/user-input/TextInputLabel';
 
 export const SignUp = () => {
   const { auth, appRegister } = useAuthStore((state) => state);
   const { setError } = useErrorStore((state) => state);
   const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
-  const displayNameRef = useRef('');
   const [addUserMutation, { loading, error }] = useAddUserMutation({
     client: useGraphQlClient(),
   });
 
+  const [formState, setFormState] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [formValidationState, setFormValidationState] = useState<{
+    emailError?: string;
+    passwordError?: string;
+    confirmPasswordError?: string;
+    usernameError?: string;
+  }>({
+    emailError: undefined,
+    passwordError: undefined,
+    confirmPasswordError: undefined,
+    usernameError: undefined,
+  });
+
+  const { username, email, password, confirmPassword } = formState;
+  const { confirmPasswordError, emailError, passwordError, usernameError } =
+    formValidationState;
+
   const handleRegister = async () => {
-    setUsernameError('');
-    setEmailError('');
-    setPasswordError(false);
-    setConfirmPasswordError('');
+    setFormValidationState({
+      emailError: undefined,
+      passwordError: undefined,
+      confirmPasswordError: undefined,
+      usernameError: undefined,
+    });
 
-    if (username === '') {
-      setUsernameError('Παρακαλώ συμπληρώστε την Ονομασία Επιχείρησης');
-    }
-
-    if (password.length < 8) {
-      setPasswordError(true);
-    }
-
-    if (password !== confirmPassword) {
-      setConfirmPasswordError('Οι κωδικοί δεν ταιριάζουν');
+    switch (true) {
+      case !username:
+        setFormValidationState((prevState) => ({
+          ...prevState,
+          usernameError: 'Το όνομα χρήστη είναι υποχρεωτικό',
+        }));
+        return;
+      case !email:
+        setFormValidationState((prevState) => ({
+          ...prevState,
+          emailError: 'Μη έγκυρο email',
+        }));
+        return;
+      case password.length < 8:
+        setFormValidationState((prevState) => ({
+          ...prevState,
+          passwordError:
+            'Ο κωδικός πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες',
+        }));
+        return;
+      case password !== confirmPassword:
+        setFormValidationState((prevState) => ({
+          ...prevState,
+          passwordError: 'Οι κωδικοι δεν ειναι ιδιοι',
+        }));
+        return;
+      default:
+        break;
     }
 
     try {
@@ -63,7 +95,9 @@ export const SignUp = () => {
           },
         };
 
-        const { data: userId } = await addUserMutation({ variables: objects });
+        const { data: userId } = await addUserMutation({
+          variables: objects,
+        });
 
         useAuthStore.setState(() => ({
           dbUser: {
@@ -75,25 +109,8 @@ export const SignUp = () => {
         router.replace('/home-page');
       }
     } catch (error: any) {
-      handleFirebaseError(error.code);
+      setError(error?.message);
       console.log(error.code);
-    }
-  };
-
-  const handleFirebaseError = (error: string) => {
-    switch (error) {
-      case 'auth/email-already-in-use':
-        setEmailError('Το email χρησιμοποιείται ήδη. Κάνε σύνδεση.');
-        break;
-      case 'auth/invalid-email':
-        setEmailError('Μη έγκυρο email');
-        break;
-      case 'auth/missing-email':
-        setEmailError('Μη έγκυρο email');
-        break;
-      default:
-        console.log(error);
-        break;
     }
   };
 
@@ -113,7 +130,14 @@ export const SignUp = () => {
           <View>
             <TextInputLabel
               label="Ονομασία Επιχείρησης"
-              onChangeText={(text) => setUsername(text)}
+              onChangeText={(text) => {
+                setFormState({ ...formState, username: text });
+                text.length &&
+                  setFormValidationState((prevState) => ({
+                    ...prevState,
+                    usernameError: undefined,
+                  }));
+              }}
               value={username}
               labelStyle={usernameError ? tw`text-red-500` : null}
               icon={
@@ -121,7 +145,7 @@ export const SignUp = () => {
                   <Ionicons
                     name="close-circle-outline"
                     size={24}
-                    onPress={() => setUsername('')}
+                    onPress={() => setFormState({ ...formState, username: '' })}
                   />
                 ) : null
               }
@@ -132,7 +156,14 @@ export const SignUp = () => {
 
             <TextInputLabel
               label="Email"
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={(text) => {
+                setFormState({ ...formState, email: text });
+                text.length &&
+                  setFormValidationState((prevState) => ({
+                    ...prevState,
+                    emailError: undefined,
+                  }));
+              }}
               value={email}
               labelStyle={emailError ? tw`text-red-500` : null}
               autoCapitalize="none"
@@ -141,7 +172,7 @@ export const SignUp = () => {
                   <Ionicons
                     name="close-circle-outline"
                     size={24}
-                    onPress={() => setEmail('')}
+                    onPress={() => setFormState({ ...formState, email: '' })}
                   />
                 ) : null
               }
@@ -152,7 +183,14 @@ export const SignUp = () => {
 
             <TextInputLabel
               label="Κωδικός"
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={(text) => {
+                text.length >= 8 &&
+                  setFormValidationState((prevState) => ({
+                    ...prevState,
+                    passwordError: undefined,
+                  }));
+                setFormState({ ...formState, password: text });
+              }}
               value={password}
               labelStyle={passwordError ? tw`text-red-500` : null}
               secureTextEntry={hidePassword}
@@ -167,7 +205,9 @@ export const SignUp = () => {
 
             <TextInputLabel
               label="Επιβεβαίωση κωδικού"
-              onChangeText={(text) => setConfirmPassword(text)}
+              onChangeText={(text) =>
+                setFormState({ ...formState, confirmPassword: text })
+              }
               value={confirmPassword}
               labelStyle={confirmPasswordError ? tw`text-red-500` : null}
               secureTextEntry={hidePassword}
@@ -185,7 +225,7 @@ export const SignUp = () => {
                   : tw`text-xs font-light mb-5`
               }
             >
-              Ο κωδικός πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες.
+              {passwordError || confirmPasswordError}
             </Text>
           </View>
 

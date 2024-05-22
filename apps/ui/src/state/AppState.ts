@@ -29,7 +29,7 @@ export type AuthState = {
 };
 
 export type ErrorState = {
-  error: string | undefined;
+  error: any;
   setError: (error: any) => void;
   clearError: () => void;
 };

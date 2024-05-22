@@ -1,5 +1,11 @@
-import { SafeAreaView, ScrollView, View, Text, Pressable } from 'react-native';
-import { Image } from 'expo-image';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  Pressable,
+  Image,
+} from 'react-native';
 import { router } from 'expo-router';
 import tw from 'twrnc';
 
@@ -21,9 +27,7 @@ export const Welcome = () => (
           <Image
             style={tw`w-70 h-70 rounded-lg mb-8`}
             tintColor={'#015f21'}
-            source="../../../assets/logo/spark-logo-horizontal.png"
-            placeholder={blurhash}
-            contentFit="none"
+            source={require('../../../assets/logo/spark-logo-horizontal.png')}
           />
         </View>
 

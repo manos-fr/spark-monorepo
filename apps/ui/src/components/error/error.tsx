@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import tw from 'twrnc';
 import { useErrorStore } from '../../state/useStore';
 import * as Device from 'expo-device';
+import { FirebaseErrors } from '@spark-monorepo/spark-shared';
 
 const ErrorComponent = (error: any) => {
   const { clearError } = useErrorStore((state) => state);
@@ -16,6 +17,14 @@ const ErrorComponent = (error: any) => {
       clearTimeout(timeout);
     };
   }, []);
+
+  const displayFirebaseError: { [key: string]: string } = {
+    [FirebaseErrors.AUTH_EMAIL_ALREADY_IN_USE]: 'Email already in use',
+    [FirebaseErrors.AUTH_INVALID_EMAIL]: 'Invalid email',
+    [FirebaseErrors.AUTH_WRONG_PASSWORD]: 'Invalid password',
+    [FirebaseErrors.AUTH_USER_NOT_FOUND]: 'User not found',
+    [FirebaseErrors.AUTH_INVALID_PASSWORD]: 'Invalid password',
+  };
 
   return (
     <View
@@ -32,7 +41,9 @@ const ErrorComponent = (error: any) => {
         )}
       >
         <Text style={tw`text-gray-200 font-semibold text-lg`}>
-          {error?.error?.toString() || 'An error occurred'}
+          {(error?.error?.name === 'FirebaseError' &&
+            displayFirebaseError[`${error?.error?.code}`]) ||
+            'An error occurred'}
         </Text>
       </View>
     </View>

@@ -1,4 +1,3 @@
-// Create SupplierDetail.tsx in the supplier folder
 import React, { useState } from 'react';
 import {
   View,
@@ -10,7 +9,6 @@ import {
 } from 'react-native';
 import tw from 'twrnc';
 import SupplierList from '../../../components/user/SupplierList';
-import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -30,10 +28,9 @@ const SupplierDetail = () => {
   );
   const router = useRouter();
   const [isChatOpen, setChatOpen] = useState(false);
-  const searchParams = useLocalSearchParams();
 
   return (
-    <ScrollView>
+    <ScrollView style={tw`mt-2 p-2`}>
       <Pressable onPress={() => router.back()}>
         <Ionicons name="chevron-back-outline" size={26} color="black" />
       </Pressable>
@@ -56,7 +53,7 @@ const SupplierDetail = () => {
                 <Text
                   style={[
                     tw`text-lg`,
-                    activeSupplyCategory === item && tw` text-white`,
+                    activeSupplyCategory === item && tw`text-white`,
                   ]}
                 >
                   {item}

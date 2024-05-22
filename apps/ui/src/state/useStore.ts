@@ -59,9 +59,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isLoggedIn: boolean;
         user: User;
       };
-    } catch (error: any | unknown) {
+    } catch (error) {
       console.log('register handled error', { error });
-      useErrorStore.setState(() => ({ error: error?.message }));
+      useErrorStore.setState(() => ({ error }));
       router.push('/sign-up');
     }
   },
@@ -79,9 +79,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isLoggedIn: boolean;
         user: User;
       };
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      useErrorStore.setState(() => ({ error: error?.message }));
+      useErrorStore.setState(() => ({ error }));
     }
   },
 
@@ -95,16 +95,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }));
       useErrorStore.setState(() => ({ error: undefined }));
       return { isLoggedIn: get().isLoggedIn } satisfies { isLoggedIn: boolean };
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      useErrorStore.setState(() => ({ error: error?.message }));
+      useErrorStore.setState(() => ({ error }));
     }
   },
 }));
 
 export const useErrorStore = create<ErrorState>((set) => ({
   error: undefined,
-  setError: (error: any) => {
+  setError: (error) => {
     set({ error });
     console.log({ error });
   },

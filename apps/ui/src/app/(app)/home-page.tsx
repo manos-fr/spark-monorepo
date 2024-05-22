@@ -2,7 +2,6 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import SupplierCard from '../../components/user/SupplierCard';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../state/useStore';
 import { useGetUserQuery } from '../../graphql/__generated__/graphql';
@@ -73,58 +72,46 @@ const HomePage = () => {
   }, [dbUser?.users, user]);
 
   return (
-    <>
-      <View style={tw`flex-row justify-end mt-12`}>
-        <Pressable onPress={() => router.push('/settings')}>
-          <Ionicons
-            name="settings-outline"
-            size={26}
-            color="black"
-            style={tw`m-5`}
-          />
-        </Pressable>
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        ref={(ref) => {
-          scrollViewRef.current = ref;
-        }}
-        contentInsetAdjustmentBehavior="automatic"
-        onStartShouldSetResponder={() => true}
-      >
-        <View style={tw`flex-1 m-4`}>
-          <Text style={tw`text-2xl font-bold mb-4`}>Οι προμηθευτές μου</Text>
-          <View style={tw`flex flex-row flex-wrap justify-between`}>
-            {dummySuppliers.map((item) => (
-              <Pressable
-                key={item.id}
-                onPress={() => router.push(`/supplier/${item.id}`)}
-              >
-                <SupplierCard
-                  name={item.name}
-                  imageUrl={item.imageUrl}
-                  address={item.address}
-                />
-              </Pressable>
-            ))}
-          </View>
-          <View style={tw`mt-10 justify-end items-end mb-10`}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      ref={(ref) => {
+        scrollViewRef.current = ref;
+      }}
+      contentInsetAdjustmentBehavior="automatic"
+      onStartShouldSetResponder={() => true}
+    >
+      <View style={tw`flex-1 m-4`}>
+        <Text style={tw`text-2xl font-bold mb-4`}>Οι προμηθευτές μου</Text>
+        <View style={tw`flex-row flex-wrap justify-between`}>
+          {dummySuppliers.map((item) => (
             <Pressable
-              onPressIn={() => setConversationsOpen(!isConversationsOpen)}
-              style={tw`bg-slate-400 rounded-lg`}
+              key={item.id}
+              onPress={() => router.push(`/supplier/${item.id}`)}
             >
-              <Text style={tw`px-5 py-2 justify-center items-center`}>
-                Conversations
-              </Text>
+              <SupplierCard
+                name={item.name}
+                imageUrl={item.imageUrl}
+                address={item.address}
+              />
             </Pressable>
-            {isConversationsOpen && (
-              <Conversations handleOpenChat={handleOpenChat} />
-            )}
-            {isChatOpen && <Chat conversationId={conversationId} />}
-          </View>
+          ))}
         </View>
-      </ScrollView>
-    </>
+        <View style={tw`mt-10 justify-end items-end mb-10`}>
+          <Pressable
+            onPressIn={() => setConversationsOpen(!isConversationsOpen)}
+            style={tw`bg-slate-400 rounded-lg`}
+          >
+            <Text style={tw`px-5 py-2 justify-center items-center`}>
+              Conversations
+            </Text>
+          </Pressable>
+          {isConversationsOpen && (
+            <Conversations handleOpenChat={handleOpenChat} />
+          )}
+          {isChatOpen && <Chat conversationId={conversationId} />}
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 

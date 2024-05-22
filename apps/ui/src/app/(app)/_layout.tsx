@@ -2,14 +2,14 @@ import { Slot } from 'expo-router';
 import { Footer } from '../../components/layout/Footer';
 import { StatusBar, SafeAreaView, View, AppState } from 'react-native';
 import tw from 'twrnc';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback, useEffect } from 'react';
 import { useAuthStore, useErrorStore } from '../../state/useStore';
 import { useUpdateUserLastSeenMutation } from '../../graphql/__generated__/graphql';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
+import * as Device from 'expo-device';
+import Header from '../../components/layout/Header';
 
 export default function AppLayout() {
-  const insets = useSafeAreaInsets();
   const { dbUser, user } = useAuthStore((state) => state);
   const { setError } = useErrorStore((state) => state);
 
@@ -65,13 +65,11 @@ export default function AppLayout() {
         translucent={true}
         animated={true}
       />
-      <SafeAreaView style={tw`bg-white flex-1 max-h-${insets.top}`} />
-      <View
-        style={tw`z-50 absolute top-0 left-0 right-0 h-${insets.top / 4} bg-teal-700 opacity-95`}
-      />
+      {Device.deviceType !== Device.DeviceType.DESKTOP && <Header />}
+      <SafeAreaView style={tw`bg-white`} />
       <Slot />
-      <SafeAreaView style={tw`bg-white flex-1 min-h-${insets.bottom * 0.4}`} />
-      <Footer bottomInset={insets.bottom * 0.4} />
+      <SafeAreaView style={tw`bg-white`} />
+      {Device.deviceType !== Device.DeviceType.DESKTOP && <Footer />}
     </>
   );
 }

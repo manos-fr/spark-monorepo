@@ -41,7 +41,7 @@ export const Chat = () => {
       conversationId: !isNaN(conversationId as unknown as number)
         ? (conversationId as unknown as number)
         : 0,
-      limit: 20,
+      limit: 50,
       offset: 0,
       order_by: messagesOrderBy,
     },
@@ -75,7 +75,7 @@ export const Chat = () => {
         }}
         isLoadingEarlier={loading}
         bottomOffset={-10}
-        inverted={isBrowser ? false : true}
+        inverted={!isBrowser}
         user={{
           ...dbUser,
           _id: dbUser?.id as number,

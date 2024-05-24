@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import SupplierCard from '../../components/user/SupplierCard';
 import tw from 'twrnc';
 import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAuthStore } from '../../state/useStore';
 import {
   useGetUserQuery,
@@ -10,16 +10,11 @@ import {
 } from '../../graphql/__generated__/graphql';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import { User } from 'firebase/auth';
-import Conversations from '../../components/chat/conversations';
-import Chat from '../../components/chat/chat';
 
 const HomePage = () => {
   const scrollViewRef = useRef<null | ScrollView>(null);
   const router = useRouter();
   const { user } = useAuthStore((state) => state);
-  const [isConversationsOpen, setConversationsOpen] = useState(false);
-  const [isChatOpen, setChatOpen] = useState(false);
-  const [conversationId, setConversationId] = useState<number>(0);
 
   const client = useGraphQlClient();
 
@@ -28,11 +23,6 @@ const HomePage = () => {
     skip: !user,
     variables: { uid: { _eq: user?.uid } },
   });
-
-  const handleOpenChat = (conversationId: number) => {
-    setConversationId(conversationId);
-    setChatOpen(!isChatOpen);
-  };
 
   useEffect(() => {
     useAuthStore.setState(() => ({
@@ -91,17 +81,13 @@ const HomePage = () => {
         </View>
         <View style={tw`mt-10 justify-end items-end mb-10`}>
           <Pressable
-            onPressIn={() => setConversationsOpen(!isConversationsOpen)}
+            onPressIn={() => router.push('/conversations')}
             style={tw`bg-slate-400 rounded-lg`}
           >
             <Text style={tw`px-5 py-2 justify-center items-center`}>
               Conversations
             </Text>
           </Pressable>
-          {isConversationsOpen && (
-            <Conversations handleOpenChat={handleOpenChat} />
-          )}
-          {isChatOpen && <Chat conversationId={conversationId} />}
         </View>
       </View>
     </ScrollView>

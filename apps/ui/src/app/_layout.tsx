@@ -8,12 +8,13 @@ import { useRouter } from 'expo-router';
 import SignUp from './(auth)/sign-up';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ErrorComponent from '../components/error/error';
+import tw from 'twrnc';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: true,
-      staleTime: 1000 * 20,
+      staleTime: 1000,
     },
     mutations: {
       onError: (error) => {
@@ -54,7 +55,7 @@ export default function Root() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
+      <SafeAreaProvider style={tw`bg-gray-200`}>
         <Slot />
         {error && <ErrorComponent error={error} />}
       </SafeAreaProvider>

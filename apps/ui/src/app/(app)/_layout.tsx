@@ -1,6 +1,6 @@
 import { Slot } from 'expo-router';
 import { Footer } from '../../components/layout/Footer';
-import { StatusBar, SafeAreaView, View, AppState } from 'react-native';
+import { StatusBar, SafeAreaView, AppState } from 'react-native';
 import tw from 'twrnc';
 import { useCallback, useEffect } from 'react';
 import { useAuthStore, useErrorStore } from '../../state/useStore';

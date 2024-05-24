@@ -48,7 +48,7 @@ const Conversations = () => {
             ]}
           >
             <View
-              style={tw`flex flex-row items-center justify-between py-1 px-1 mx-2 rounded-lg shadow-lg opacity-100`}
+              style={tw`flex flex-row max-w-50 items-center justify-between py-1 px-1 mx-2 rounded-lg shadow-lg opacity-100`}
             >
               <Image
                 contentFit="scale-down"
@@ -58,9 +58,13 @@ const Conversations = () => {
                 }}
                 style={tw`w-20 h-20 pr-12 rounded-full mr-4`}
               />
-              <View style={tw`pl-12`}>
+              <View style={tw`pl-12 pr-10`}>
                 <Text style={tw`text-lg font-semibold`}>
-                  {item.conversation.conversation_users[index].user.name}
+                  {
+                    item.conversation.conversation_users.filter(
+                      (user) => user.user.name !== dbUser?.displayName,
+                    )[0].user.name
+                  }
                 </Text>
               </View>
             </View>

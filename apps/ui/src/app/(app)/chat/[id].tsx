@@ -76,12 +76,12 @@ export const Chat = () => {
         inverted={isBrowser ? false : true}
         user={{ ...dbUser, _id: dbUser?.id as number }}
         onSend={async (messages: IMessage[]) => {
-          if (!isBrowser) {
-            giftedChatRef?.current?.scrollToIndex({
-              animated: true,
-              index: 0,
-            });
-          }
+          // if (!isBrowser) {
+          //   giftedChatRef?.current?.scrollToIndex({
+          //     animated: true,
+          //     index: 1,
+          //   });
+          // }
           try {
             const objects = [
               {

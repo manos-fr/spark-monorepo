@@ -41,7 +41,7 @@ export const Chat = () => {
       conversationId: !isNaN(conversationId as unknown as number)
         ? (conversationId as unknown as number)
         : 0,
-      limit: 50,
+      limit: 20,
       offset: 0,
       order_by: messagesOrderBy,
     },
@@ -63,18 +63,24 @@ export const Chat = () => {
   return (
     <View style={tw`flex-1`}>
       <GiftedChat
+        keyboardShouldPersistTaps={'handled'}
         renderComposer={ChatComposer}
         scrollToBottom={false}
         messageContainerRef={giftedChatRef}
-        // infiniteScroll
+        infiniteScroll
         isTyping
-        // loadEarlier
-        // onLoadEarlier={() => {
-        //   console.log('loading earlier');
-        // }}
-        // isLoadingEarlier={loading}
+        loadEarlier
+        onLoadEarlier={() => {
+          console.log('loading earlier');
+        }}
+        isLoadingEarlier={loading}
+        bottomOffset={-10}
         inverted={isBrowser ? false : true}
-        user={{ ...dbUser, _id: dbUser?.id as number }}
+        user={{
+          ...dbUser,
+          _id: dbUser?.id as number,
+          name: dbUser?.name as string,
+        }}
         onSend={async (messages: IMessage[]) => {
           // if (!isBrowser) {
           //   giftedChatRef?.current?.scrollToIndex({

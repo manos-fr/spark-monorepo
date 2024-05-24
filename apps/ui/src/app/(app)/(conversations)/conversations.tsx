@@ -62,8 +62,8 @@ const Conversations = () => {
                 <Text style={tw`text-lg font-semibold`}>
                   {
                     item.conversation.conversation_users.filter(
-                      (user) => user.user.name !== dbUser?.displayName,
-                    )[0].user.name
+                      (user) => user.user.name !== dbUser?.name,
+                    )[0]?.user?.name
                   }
                 </Text>
               </View>

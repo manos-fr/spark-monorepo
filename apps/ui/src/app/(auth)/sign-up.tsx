@@ -103,6 +103,7 @@ export const SignUp = () => {
           dbUser: {
             ...user,
             id: userId?.insert_users?.returning?.[0].id || undefined,
+            name: user.displayName || '',
           },
         }));
 

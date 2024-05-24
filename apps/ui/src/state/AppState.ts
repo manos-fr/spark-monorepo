@@ -12,7 +12,11 @@ export type CartState = {
 export type AuthState = {
   user: User | null;
   dbUser:
-    | (User & { id: number | undefined; profile_image?: string | null })
+    | (User & {
+        id: number | undefined;
+        profile_image?: string | null;
+        name?: string | null;
+      })
     | null;
   auth: Auth | null;
   initialized: boolean;

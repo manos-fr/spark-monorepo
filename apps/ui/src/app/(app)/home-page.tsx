@@ -29,6 +29,7 @@ const HomePage = () => {
       dbUser: {
         ...(user as User),
         id: dbUser?.users?.[0]?.id,
+        name: dbUser?.users?.[0]?.name,
       },
     }));
   }, [dbUser?.users, user]);

@@ -8,8 +8,10 @@ import { useUpdateUserLastSeenMutation } from '../../graphql/__generated__/graph
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import * as Device from 'expo-device';
 import Header from '../../components/layout/Header';
+import { usePathname } from 'expo-router';
 
 export default function AppLayout() {
+  const path = usePathname();
   const { dbUser, user } = useAuthStore((state) => state);
   const { setError } = useErrorStore((state) => state);
 
@@ -68,8 +70,10 @@ export default function AppLayout() {
       {Device.deviceType !== Device.DeviceType.DESKTOP && <Header />}
       <SafeAreaView style={tw`bg-white`} />
       <Slot />
-      <SafeAreaView style={tw`bg-white`} />
-      {Device.deviceType !== Device.DeviceType.DESKTOP && <Footer />}
+
+      {!path.includes('/chat') && <SafeAreaView style={tw`bg-white`} />}
+      {Device.deviceType !== Device.DeviceType.DESKTOP &&
+        !path.includes('/chat') && <Footer />}
     </>
   );
 }

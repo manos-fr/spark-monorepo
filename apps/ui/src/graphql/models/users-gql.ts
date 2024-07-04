@@ -26,6 +26,8 @@ export const getUsers = gql`
       email
       id
       uid
+      name
+      profile_image
       updated_at
       created_at
       last_seen
@@ -46,6 +48,19 @@ export const getUser = gql`
   query getUser($uid: String_comparison_exp!) {
     users(where: { uid: $uid }) {
       id
+    }
+  }
+`;
+
+export const getUserSuppliers = gql`
+  query getUserSuppliers($id: Int!) {
+    user_relationships(where: { owner_id: { _eq: $id } }) {
+      supplier: userBySupplierId {
+        id
+        name
+        profile_image
+        address
+      }
     }
   }
 `;

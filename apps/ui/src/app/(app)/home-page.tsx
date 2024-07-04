@@ -4,44 +4,14 @@ import tw from 'twrnc';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../state/useStore';
-import { useGetUserQuery } from '../../graphql/__generated__/graphql';
+import {
+  useGetUserQuery,
+  useGetUserSuppliersQuery,
+} from '../../graphql/__generated__/graphql';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import { User } from 'firebase/auth';
 import Conversations from '../../components/chat/conversations';
 import Chat from '../../components/chat/chat';
-
-const dummySuppliers = [
-  {
-    id: '1',
-    name: 'Μανωλιός',
-    imageUrl: 'https://picsum.photos/seed/696/3000/2000',
-    address: 'Κονταξακη 8, Τουμπα',
-  },
-  {
-    id: '2',
-    name: 'Πατατάς',
-    imageUrl: 'https://picsum.photos/seed/692/3000/2000',
-    address: 'Παμε λιγο 25, Τουμπα',
-  },
-  {
-    id: '3',
-    name: 'Μπέλμπας',
-    imageUrl: 'https://picsum.photos/seed/699/3000/2000',
-    address: 'Στο ετσι το αλλιως, 25 Παοκ',
-  },
-  {
-    id: '4',
-    name: 'Αλανιάρα κότα',
-    imageUrl: 'https://picsum.photos/seed/691/3000/2000',
-    address: 'Ωπα λαλα 42, Καλαμαριά',
-  },
-  {
-    id: '5',
-    name: 'Πάμε λίγο',
-    imageUrl: 'https://picsum.photos/seed/681/3000/2000',
-    address: 'Καπου εκει κοντα τριγυρω περιπου 49, Τουμπα',
-  },
-];
 
 const HomePage = () => {
   const scrollViewRef = useRef<null | ScrollView>(null);
@@ -51,8 +21,10 @@ const HomePage = () => {
   const [isChatOpen, setChatOpen] = useState(false);
   const [conversationId, setConversationId] = useState<number>(0);
 
+  const client = useGraphQlClient();
+
   const { data: dbUser } = useGetUserQuery({
-    client: useGraphQlClient(),
+    client,
     skip: !user,
     variables: { uid: { _eq: user?.uid } },
   });
@@ -71,6 +43,27 @@ const HomePage = () => {
     }));
   }, [dbUser?.users, user]);
 
+  const {
+    data: connectedSuppliers,
+    loading: loadingConnectedSuppliers,
+    error: errorFetchingConnectedSuppliers,
+  } = useGetUserSuppliersQuery({
+    client,
+    variables: { id: dbUser?.users?.[0]?.id || 0 },
+  });
+
+  if (loadingConnectedSuppliers) {
+    return <Text>Loading data...</Text>;
+  }
+
+  if (errorFetchingConnectedSuppliers) {
+    return (
+      <Text>
+        Error fetching suppliers: {errorFetchingConnectedSuppliers.message}
+      </Text>
+    );
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -83,15 +76,15 @@ const HomePage = () => {
       <View style={tw`flex-1 m-4`}>
         <Text style={tw`text-2xl font-bold mb-4`}>Οι προμηθευτές μου</Text>
         <View style={tw`flex-row flex-wrap justify-between`}>
-          {dummySuppliers.map((item) => (
+          {connectedSuppliers?.user_relationships.map((user) => (
             <Pressable
-              key={item.id}
-              onPress={() => router.push(`/supplier/${item.id}`)}
+              key={user.supplier.id}
+              onPress={() => router.push(`/supplier/${user.supplier.id}`)}
             >
               <SupplierCard
-                name={item.name}
-                imageUrl={item.imageUrl}
-                address={item.address}
+                name={user.supplier.name}
+                imageUrl={user.supplier.profile_image}
+                address={user.supplier.address}
               />
             </Pressable>
           ))}

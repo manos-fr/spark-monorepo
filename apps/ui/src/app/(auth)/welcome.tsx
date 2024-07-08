@@ -33,7 +33,7 @@ export const Welcome = () => (
 
         <Pressable
           onPress={() => router.push('/login')}
-          style={tw`bg-teal-700 rounded-lg py-2 mt-8`}
+          style={tw`bg-teal-100 rounded-lg py-2 mt-8`}
         >
           <Text style={tw`text-center font-semibold text-white text-lg`}>
             Σύνδεση

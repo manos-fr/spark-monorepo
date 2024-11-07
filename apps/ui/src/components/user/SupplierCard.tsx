@@ -4,17 +4,21 @@ import { Image } from 'expo-image';
 import tw from 'twrnc';
 
 interface SupplierCardProps {
-  name: string;
-  address: string;
-  imageUrl: string;
+  name: string | undefined | null;
+  imageUrl: string | undefined | null;
+  address: string | undefined | null;
 }
 
-const SupplierCard = ({ name, address, imageUrl }: SupplierCardProps) => (
-  <View style={tw`mx-2 my-4`}>
-    <Image source={imageUrl} style={tw`border rounded w-40 h-40`} />
-    <View style={tw`flex items-start mt-2`}>
-      <Text style={tw`text-black text-lg font-semibold`}>{name}</Text>
-      <Text style={tw`w-38 text-black text-xs font-light`}>{address}</Text>
+const SupplierCard = ({ name, imageUrl, address }: SupplierCardProps) => (
+  <View style={tw`w-36 mx-2 mt-4`}>
+    <Image
+      source={imageUrl}
+      contentFit="cover"
+      style={tw`border rounded-lg w-36 h-36`}
+    />
+    <View style={tw`flex mt-2`}>
+      <Text style={tw`text-black font-bold`}>{name}</Text>
+      <Text style={tw`text-black text-xs overflow-hidden mt-2`}>{address}</Text>
     </View>
   </View>
 );

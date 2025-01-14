@@ -1,15 +1,16 @@
 import { Slot } from 'expo-router';
 import { Footer } from '../../components/layout/Footer';
-import { StatusBar, SafeAreaView, View, AppState } from 'react-native';
+import { StatusBar, SafeAreaView, AppState, Platform } from 'react-native';
 import tw from 'twrnc';
 import { useCallback, useEffect } from 'react';
 import { useAuthStore, useErrorStore } from '../../state/useStore';
 import { useUpdateUserLastSeenMutation } from '../../graphql/__generated__/graphql';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
-import * as Device from 'expo-device';
 import Header from '../../components/layout/Header';
+import { usePathname } from 'expo-router';
 
-export default function AppLayout() {
+const AppLayout = () => {
+  const path = usePathname();
   const { dbUser, user } = useAuthStore((state) => state);
   const { setError } = useErrorStore((state) => state);
 
@@ -57,6 +58,8 @@ export default function AppLayout() {
     };
   }, [handleAppStateChange]);
 
+  const isBrowser = Platform.OS === 'web';
+
   return (
     <>
       <StatusBar
@@ -65,11 +68,14 @@ export default function AppLayout() {
         translucent={true}
         animated={true}
       />
-      {Device.deviceType !== Device.DeviceType.DESKTOP && <Header />}
+      {!isBrowser && <Header />}
       <SafeAreaView style={tw`bg-white`} />
       <Slot />
-      <SafeAreaView style={tw`bg-white`} />
-      {Device.deviceType !== Device.DeviceType.DESKTOP && <Footer />}
+
+      {!path.includes('/chat') && <SafeAreaView style={tw`bg-white`} />}
+      {!isBrowser && !path.includes('/chat') && <Footer />}
     </>
   );
-}
+};
+
+export default AppLayout;

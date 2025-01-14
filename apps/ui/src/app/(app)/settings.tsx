@@ -43,7 +43,7 @@ const SettingsPage = () => {
   ];
 
   return (
-    <View style={tw`flex-1 bg-white p-2 mt-2`}>
+    <View style={tw`flex-1 mt-2 p-2`}>
       <Pressable onPress={() => router.back()} style={tw`mb-4`}>
         <Ionicons name="chevron-back-outline" size={26} color="black" />
       </Pressable>

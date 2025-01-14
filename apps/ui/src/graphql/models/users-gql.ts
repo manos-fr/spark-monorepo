@@ -24,6 +24,7 @@ export const getUsers = gql`
   query getUsers {
     users {
       email
+      name
       id
       uid
       name
@@ -48,6 +49,7 @@ export const getUser = gql`
   query getUser($uid: String_comparison_exp!) {
     users(where: { uid: $uid }) {
       id
+      name
     }
   }
 `;

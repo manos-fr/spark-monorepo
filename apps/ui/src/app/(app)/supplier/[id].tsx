@@ -27,7 +27,6 @@ const SupplierDetail = () => {
     supplyCategory[0],
   );
   const router = useRouter();
-  const [isChatOpen, setChatOpen] = useState(false);
 
   return (
     <ScrollView style={tw`mt-2 p-2`}>
@@ -64,16 +63,6 @@ const SupplierDetail = () => {
         </View>
         <SupplierList category={activeSupplyCategory} />
       </View>
-      <Pressable
-        onPressIn={() => {
-          setChatOpen(!isChatOpen);
-        }}
-        style={tw`self-center mb-5 bg-teal-700 rounded-md max-h-12 min-w-20`}
-      >
-        <Text style={tw`text-center font-semibold text-white text-lg`}>
-          Chat
-        </Text>
-      </Pressable>
     </ScrollView>
   );
 };

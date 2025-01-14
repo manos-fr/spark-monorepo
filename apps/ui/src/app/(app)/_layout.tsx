@@ -9,7 +9,7 @@ import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import Header from '../../components/layout/Header';
 import { usePathname } from 'expo-router';
 
-export default function AppLayout() {
+const AppLayout = () => {
   const path = usePathname();
   const { dbUser, user } = useAuthStore((state) => state);
   const { setError } = useErrorStore((state) => state);
@@ -76,4 +76,6 @@ export default function AppLayout() {
       {!isBrowser && !path.includes('/chat') && <Footer />}
     </>
   );
-}
+};
+
+export default AppLayout;

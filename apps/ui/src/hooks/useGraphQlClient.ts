@@ -5,99 +5,174 @@ import {
   split,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { useAuthStore, useErrorStore } from '../state/useStore'; // Import your token refresh function
-import { useMemo } from 'react';
+import { useAuthStore, useErrorStore } from '../state/useStore';
+import { useMemo, useRef, useCallback } from 'react';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { UserType } from '@spark-monorepo/spark-shared';
 import { auth } from '../../firebase-config';
 import { createClient } from 'graphql-ws';
 
-const EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR =
-  process.env.EXPO_PUBLIC_HASURA_ENDPOINT_EMULATOR;
-const EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE =
-  process.env.EXPO_PUBLIC_HASURA_ENDPOINT_DEVICE;
-const EXPO_PUBLIC_HASURA_ENDPOINT_PROD =
-  process.env.EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
+const HASURA_URL = process.env.EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
 
-const HASURA_URL = EXPO_PUBLIC_HASURA_ENDPOINT_PROD;
+interface TokenManager {
+  accessToken: string | undefined;
+  expirationTime: string | number;
+}
+
+/**
+ * Check if the token is expired
+ */
+function isTokenExpired(expirationTime: string | number | undefined): boolean {
+  if (expirationTime === undefined || expirationTime === null) {
+    return true;
+  }
+
+  const expTime =
+    typeof expirationTime === 'string'
+      ? parseInt(expirationTime, 10)
+      : expirationTime;
+
+  if (isNaN(expTime)) {
+    return true;
+  }
+
+  return expTime <= Date.now();
+}
+
+/**
+ * Get a fresh access token, refreshing if expired
+ */
+async function getAccessToken(
+  tokenManager: TokenManager | null | undefined,
+): Promise<string | null> {
+  if (!tokenManager?.accessToken) {
+    return null;
+  }
+
+  if (isTokenExpired(tokenManager.expirationTime)) {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      return null;
+    }
+
+    try {
+      const newToken = await currentUser.getIdToken(true);
+      if (__DEV__) {
+        console.log('Token refreshed');
+      }
+      return newToken;
+    } catch (error) {
+      if (__DEV__) {
+        console.error('Failed to refresh token:', error);
+      }
+      return null;
+    }
+  }
+
+  return tokenManager.accessToken;
+}
+
+/**
+ * Get WebSocket URL from HTTP URL
+ */
+function getWsUrl(httpUrl: string | undefined): string {
+  if (!httpUrl) {
+    return '';
+  }
+  return `wss://${httpUrl.replace(/^https?:\/\//, '')}`;
+}
+
+// Shared cache instance to prevent losing cached data on re-renders
+const sharedCache = new InMemoryCache();
 
 export const useGraphQlClient = () => {
   const { setError } = useErrorStore((state) => state);
   const { user } = useAuthStore((state) => state);
-  let token: UserType['stsTokenManager'] | null;
 
-  const authLink = setContext(async (_, { headers }) => {
-    token = (user as UserType)?.stsTokenManager;
+  // Keep track of user ID for cache invalidation
+  const userIdRef = useRef<string | null>(null);
+  const currentUserId = user?.uid ?? null;
 
-    await refreshTokenIfExpired(token);
+  // Reset cache when user changes (login/logout)
+  if (userIdRef.current !== currentUserId) {
+    if (userIdRef.current !== null) {
+      // User changed, reset cache
+      sharedCache.reset();
+    }
+    userIdRef.current = currentUserId;
+  }
+
+  // Memoize the getAuthHeaders function
+  const getAuthHeaders = useCallback(async () => {
+    const tokenManager = (user as UserType | null)?.stsTokenManager ?? null;
+    const accessToken = await getAccessToken(tokenManager);
 
     return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token.accessToken?.toString()}` : '',
-      },
+      authorization: accessToken ? `Bearer ${accessToken}` : '',
     };
-  });
+  }, [user]);
 
-  const httpLink = createHttpLink({
-    uri: HASURA_URL,
-  });
-  const wsLink = new GraphQLWsLink(
-    createClient({
-      on: {
-        connected: () => console.log('socket connected'),
-        closed: () => console.log('socket closed'),
-        error: (error) => {
-          setError(error);
+  // Memoize the client creation
+  const client = useMemo(() => {
+    const httpLink = createHttpLink({
+      uri: HASURA_URL,
+    });
+
+    const authLink = setContext(async (_, { headers }) => {
+      const authHeaders = await getAuthHeaders();
+      return {
+        headers: {
+          ...headers,
+          ...authHeaders,
         },
-      },
-      url: `wss://${HASURA_URL?.replaceAll('https://', '')}`,
-      connectionParams: async () => {
-        token = (user as UserType)?.stsTokenManager;
+      };
+    });
 
-        await refreshTokenIfExpired(token);
-
-        return {
-          headers: {
-            authorization: token
-              ? `Bearer ${token?.accessToken?.toString()}`
-              : '',
+    const wsLink = new GraphQLWsLink(
+      createClient({
+        on: {
+          connected: () => {
+            if (__DEV__) {
+              console.log('WebSocket connected');
+            }
           },
-        };
-      },
-    }),
-  );
-
-  const splitLink = split(
-    ({ query }) => {
-      const definition = getMainDefinition(query);
-      return (
-        definition.kind === 'OperationDefinition' &&
-        definition.operation === 'subscription'
-      );
-    },
-    wsLink,
-    authLink.concat(httpLink),
-  );
-
-  const client = useMemo(
-    () =>
-      new ApolloClient({
-        link: splitLink,
-        cache: new InMemoryCache(),
+          closed: () => {
+            if (__DEV__) {
+              console.log('WebSocket closed');
+            }
+          },
+          error: (error) => {
+            setError(error);
+          },
+        },
+        url: getWsUrl(HASURA_URL),
+        connectionParams: async () => {
+          const authHeaders = await getAuthHeaders();
+          return {
+            headers: authHeaders,
+          };
+        },
       }),
-    [user],
-  );
-  return client;
-};
+    );
 
-const refreshTokenIfExpired = async (token: {
-  accessToken: string | undefined;
-  expirationTime: string;
-}) => {
-  if (+token?.expirationTime <= +new Date().getTime()?.toString()) {
-    token.accessToken = await auth.currentUser?.getIdToken(true);
-    console.log('Token refreshed');
-  }
+    const splitLink = split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === 'OperationDefinition' &&
+          definition.operation === 'subscription'
+        );
+      },
+      wsLink,
+      authLink.concat(httpLink),
+    );
+
+    return new ApolloClient({
+      link: splitLink,
+      cache: sharedCache,
+    });
+  }, [getAuthHeaders, setError]);
+
+  return client;
 };

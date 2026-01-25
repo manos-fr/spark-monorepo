@@ -1,4 +1,4 @@
-import { Credentials, Product } from '@spark-monorepo/spark-shared';
+import { Credentials, Product, AppError } from '@spark-monorepo/spark-shared';
 import { User, Auth } from 'firebase/auth';
 
 export type CartState = {
@@ -33,7 +33,7 @@ export type AuthState = {
 };
 
 export type ErrorState = {
-  error: any;
-  setError: (error: any) => void;
+  error: AppError | undefined;
+  setError: (error: unknown) => void;
   clearError: () => void;
 };

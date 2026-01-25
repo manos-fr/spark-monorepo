@@ -3,9 +3,13 @@ import { View, Text } from 'react-native';
 import tw from 'twrnc';
 import { useErrorStore } from '../../state/useStore';
 import * as Device from 'expo-device';
-import { FirebaseErrors } from '@spark-monorepo/spark-shared';
+import { AppError, getErrorMessage } from '@spark-monorepo/spark-shared';
 
-const ErrorComponent = (error: any) => {
+interface ErrorComponentProps {
+  error: AppError;
+}
+
+const ErrorComponent: React.FC<ErrorComponentProps> = ({ error }) => {
   const { clearError } = useErrorStore((state) => state);
 
   useEffect(() => {
@@ -16,15 +20,9 @@ const ErrorComponent = (error: any) => {
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [clearError]);
 
-  const displayFirebaseError: { [key: string]: string } = {
-    [FirebaseErrors.AUTH_EMAIL_ALREADY_IN_USE]: 'Email already in use',
-    [FirebaseErrors.AUTH_INVALID_EMAIL]: 'Invalid email',
-    [FirebaseErrors.AUTH_WRONG_PASSWORD]: 'Invalid password',
-    [FirebaseErrors.AUTH_USER_NOT_FOUND]: 'User not found',
-    [FirebaseErrors.AUTH_INVALID_PASSWORD]: 'Invalid password',
-  };
+  const errorMessage = getErrorMessage(error);
 
   return (
     <View
@@ -41,12 +39,11 @@ const ErrorComponent = (error: any) => {
         )}
       >
         <Text style={tw`text-gray-200 font-semibold text-lg`}>
-          {(error?.error?.name === 'FirebaseError' &&
-            displayFirebaseError[`${error?.error?.code}`]) ||
-            'An error occurred'}
+          {errorMessage}
         </Text>
       </View>
     </View>
   );
 };
+
 export default ErrorComponent;

@@ -1,12 +1,37 @@
 import { SafeAreaView, ScrollView, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuthStore, useErrorStore } from '../../state/useStore';
 import { useRouter } from 'expo-router';
 import { useGraphQlClient } from '../../hooks/useGraphQlClient';
 import { useAddUserMutation } from '../../graphql/__generated__/graphql';
 import TextInputLabel from '../../components/user-input/TextInputLabel';
+
+/**
+ * Email validation regex
+ */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * Validates email format
+ */
+function isValidEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email.trim());
+}
+
+/**
+ * Checks if password meets minimum requirements
+ */
+function isValidPassword(password: string): { valid: boolean; error?: string } {
+  if (password.length < 8) {
+    return {
+      valid: false,
+      error: 'Ο κωδικός πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες',
+    };
+  }
+  return { valid: true };
+}
 
 export const SignUp = () => {
   const { auth, appRegister } = useAuthStore((state) => state);
@@ -40,7 +65,8 @@ export const SignUp = () => {
   const { confirmPasswordError, emailError, passwordError, usernameError } =
     formValidationState;
 
-  const handleRegister = async () => {
+  const handleRegister = useCallback(async () => {
+    // Clear previous validation errors
     setFormValidationState({
       emailError: undefined,
       passwordError: undefined,
@@ -48,72 +74,90 @@ export const SignUp = () => {
       usernameError: undefined,
     });
 
-    switch (true) {
-      case !username:
-        setFormValidationState((prevState) => ({
-          ...prevState,
-          usernameError: 'Το όνομα χρήστη είναι υποχρεωτικό',
-        }));
-        return;
-      case !email:
-        setFormValidationState((prevState) => ({
-          ...prevState,
-          emailError: 'Μη έγκυρο email',
-        }));
-        return;
-      case password.length < 8:
-        setFormValidationState((prevState) => ({
-          ...prevState,
-          passwordError:
-            'Ο κωδικός πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες',
-        }));
-        return;
-      case password !== confirmPassword:
-        setFormValidationState((prevState) => ({
-          ...prevState,
-          passwordError: 'Οι κωδικοι δεν ειναι ιδιοι',
-        }));
-        return;
-      default:
-        break;
+    // Validate username
+    const trimmedUsername = username.trim();
+    if (!trimmedUsername) {
+      setFormValidationState((prevState) => ({
+        ...prevState,
+        usernameError: 'Το όνομα χρήστη είναι υποχρεωτικό',
+      }));
+      return;
+    }
+
+    // Validate email format
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !isValidEmail(trimmedEmail)) {
+      setFormValidationState((prevState) => ({
+        ...prevState,
+        emailError: 'Μη έγκυρο email',
+      }));
+      return;
+    }
+
+    // Validate password
+    const passwordValidation = isValidPassword(password);
+    if (!passwordValidation.valid) {
+      setFormValidationState((prevState) => ({
+        ...prevState,
+        passwordError: passwordValidation.error,
+      }));
+      return;
+    }
+
+    // Validate password confirmation
+    if (password !== confirmPassword) {
+      setFormValidationState((prevState) => ({
+        ...prevState,
+        confirmPasswordError: 'Οι κωδικοί δεν είναι ίδιοι',
+      }));
+      return;
     }
 
     try {
-      const user = (
-        await appRegister(auth, {
-          email,
-          password,
-        })
-      )?.user;
+      // Pass displayName to appRegister so it gets set on the user profile
+      const result = await appRegister(auth, {
+        email: trimmedEmail,
+        password,
+        displayName: trimmedUsername,
+      });
+
+      const user = result?.user;
 
       if (user) {
-        const objects = {
+        const variables = {
           objects: {
             uid: user.uid,
-            email: user.email,
-            name: user.displayName || '',
+            email: user.email ?? trimmedEmail,
+            name: trimmedUsername,
           },
         };
 
-        const { data: userId } = await addUserMutation({
-          variables: objects,
-        });
+        const { data: userId } = await addUserMutation({ variables });
 
         useAuthStore.setState(() => ({
           dbUser: {
             ...user,
-            id: userId?.insert_users?.returning?.[0].id || undefined,
-            name: user.displayName || '',
+            id: userId?.insert_users?.returning?.[0]?.id ?? undefined,
+            name: trimmedUsername,
           },
         }));
 
         router.replace('/home-page');
       }
-    } catch (error: any) {
-      setError(error?.message);
-      console.log(error.code);
+    } catch (error) {
+      setError(error);
     }
-  };
+  }, [
+    username,
+    email,
+    password,
+    confirmPassword,
+    auth,
+    appRegister,
+    addUserMutation,
+    setError,
+    router,
+  ]);
 
   return (
     <SafeAreaView style={tw`bg-white flex-1 mx-1`}>

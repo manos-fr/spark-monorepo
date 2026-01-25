@@ -39,6 +39,13 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Environment variables (keep secrets out of git!)
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.*.example
+
 # Expo
 node_modules/
 .expo/

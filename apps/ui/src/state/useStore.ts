@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { AuthState, CartState, ErrorState } from './AppState';
-import { Credentials, Product } from '@spark-monorepo/spark-shared';
+import {
+  Credentials,
+  Product,
+  normalizeError,
+} from '@spark-monorepo/spark-shared';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -42,17 +46,39 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoggedIn: false,
   appRegister: async (auth: Auth | null, credentials: Credentials) => {
     const { email, password, displayName } = credentials;
+
+    if (!auth) {
+      useErrorStore
+        .getState()
+        .setError(new Error('Authentication not initialized'));
+      return;
+    }
+
+    if (!email || !password) {
+      useErrorStore
+        .getState()
+        .setError(new Error('Email and password are required'));
+      return;
+    }
+
     try {
       const { user } = await createUserWithEmailAndPassword(
-        auth as Auth,
-        email as string,
-        password as string,
+        auth,
+        email,
+        password,
       );
-      if (auth?.currentUser) {
+
+      if (auth.currentUser) {
         await emailVerification();
-        console.log('Verification mail sent');
+        if (__DEV__) {
+          console.log('Verification mail sent');
+        }
       }
-      await updateProfile(user as User, { displayName: displayName as string });
+
+      if (displayName) {
+        await updateProfile(user, { displayName });
+      }
+
       set(() => ({ user, isLoggedIn: true }));
 
       return { isLoggedIn: get().isLoggedIn, user } satisfies {
@@ -60,53 +86,79 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         user: User;
       };
     } catch (error) {
-      console.log('register handled error', { error });
-      useErrorStore.setState(() => ({ error }));
+      useErrorStore.getState().setError(error);
       router.push('/sign-up');
+      return undefined;
     }
   },
 
   appLogin: async (auth: Auth | null, credentials: Credentials) => {
     const { email, password } = credentials;
+
+    if (!auth) {
+      useErrorStore
+        .getState()
+        .setError(new Error('Authentication not initialized'));
+      return;
+    }
+
+    if (!email || !password) {
+      useErrorStore
+        .getState()
+        .setError(new Error('Email and password are required'));
+      return;
+    }
+
     try {
-      const { user } = await signInWithEmailAndPassword(
-        auth as Auth,
-        email as string,
-        password as string,
-      );
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
       set(() => ({ user, isLoggedIn: true }));
       return { isLoggedIn: get().isLoggedIn, user } satisfies {
         isLoggedIn: boolean;
         user: User;
       };
     } catch (error) {
-      console.log(error);
-      useErrorStore.setState(() => ({ error }));
+      useErrorStore.getState().setError(error);
+      return undefined;
     }
   },
 
   appSignOut: async (auth: Auth | null) => {
+    if (!auth) {
+      useErrorStore
+        .getState()
+        .setError(new Error('Authentication not initialized'));
+      return;
+    }
+
     try {
-      await signOut(auth as Auth);
+      await signOut(auth);
       set(() => ({
         user: null,
         dbUser: null,
         isLoggedIn: false,
       }));
-      useErrorStore.setState(() => ({ error: undefined }));
+      useErrorStore.getState().clearError();
       return { isLoggedIn: get().isLoggedIn } satisfies { isLoggedIn: boolean };
     } catch (error) {
-      console.log(error);
-      useErrorStore.setState(() => ({ error }));
+      useErrorStore.getState().setError(error);
+      return undefined;
     }
   },
 }));
 
 export const useErrorStore = create<ErrorState>((set) => ({
   error: undefined,
-  setError: (error) => {
-    set({ error });
-    console.log({ error });
+  setError: (error: unknown) => {
+    const normalizedError = normalizeError(error);
+    set({ error: normalizedError });
+    // Only log in development
+    if (__DEV__) {
+      console.log(
+        'Error occurred:',
+        normalizedError.type,
+        normalizedError.message,
+      );
+    }
   },
   clearError: () => set({ error: undefined }),
 }));

@@ -1,46 +1,62 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../../state/useStore';
+import { useAuthStore, useErrorStore } from '../../state/useStore';
 import { router } from 'expo-router';
-import { Auth } from 'firebase/auth';
+
+interface SettingsOption {
+  id: string;
+  label: string;
+  onPress: () => void;
+}
 
 const SettingsPage = () => {
   const { auth, appSignOut } = useAuthStore((state) => state);
-  const handlePress = (buttonLabel: any) => {
-    console.log({ buttonLabel });
-  };
+  const { setError } = useErrorStore((state) => state);
 
-  const handleSignOut = async () => {
+  const handlePress = useCallback((buttonLabel: string) => {
+    if (__DEV__) {
+      console.log({ buttonLabel });
+    }
+  }, []);
+
+  const handleSignOut = useCallback(async () => {
     try {
-      const isLoggedIn = (await appSignOut(auth as Auth))?.isLoggedIn;
-      if (!isLoggedIn) {
+      const result = await appSignOut(auth);
+      if (result && !result.isLoggedIn) {
         router.replace('/welcome');
       }
     } catch (error) {
-      console.log('Error signing out the user', { error });
+      setError(error);
     }
-  };
+  }, [auth, appSignOut, setError]);
 
-  const settingsOptions = [
-    {
-      label: 'Ο λογαριασμός μου',
-      onPress: () => handlePress('Account button pressed'),
-    },
-    {
-      label: 'Ειδοποιήσεις',
-      onPress: () => handlePress('Notifications button pressed'),
-    },
-    {
-      label: 'Επικοινωνία',
-      onPress: () => handlePress('Contact button pressed'),
-    },
-    {
-      label: 'Αποσύνδεση',
-      onPress: async () => await handleSignOut(),
-    },
-  ];
+  const settingsOptions: SettingsOption[] = useMemo(
+    () => [
+      {
+        id: 'account',
+        label: 'Ο λογαριασμός μου',
+        onPress: () => handlePress('Account button pressed'),
+      },
+      {
+        id: 'notifications',
+        label: 'Ειδοποιήσεις',
+        onPress: () => handlePress('Notifications button pressed'),
+      },
+      {
+        id: 'contact',
+        label: 'Επικοινωνία',
+        onPress: () => handlePress('Contact button pressed'),
+      },
+      {
+        id: 'signout',
+        label: 'Αποσύνδεση',
+        onPress: handleSignOut,
+      },
+    ],
+    [handlePress, handleSignOut],
+  );
 
   return (
     <View style={tw`flex-1 mt-2 p-2`}>
@@ -58,9 +74,9 @@ const SettingsPage = () => {
           style={tw`bg-teal-200 p-1`}
         />
       </View>
-      {settingsOptions.map((option, index) => (
+      {settingsOptions.map((option) => (
         <TouchableOpacity
-          key={index}
+          key={option.id}
           onPress={option.onPress}
           style={tw`flex py-3 border-b border-gray-200`}
         >
